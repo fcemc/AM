@@ -49,12 +49,12 @@ $(document).ready(function () {
         $("#memgridContainer").hide();
 
         if (this.value == "TELEPHONE" || this.value == "MBRSEP" || this.value === "MBRNO") {
-            $("#member-autocomplete-input").prop('type', 'number');
+            $(this).prop('type', 'number');
         }
         else {
-            $("#member-autocomplete-input").prop('type', '');
+            $(this).prop('type', 'text');
         }
-        $("#member-autocomplete-input").focus();
+        $(this).focus();
     });
 
     $("#cancelCheckin").on("click", function () {
