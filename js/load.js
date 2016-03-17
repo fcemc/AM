@@ -89,10 +89,10 @@ function getMember() {
             }
         });
         
-        $.ajax({
-            async: true,
+        var paramItems = f + "|" + v;
+        $.ajax({            
             type: "GET",
-            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + f + "|" + v,
+            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + paramItems,
             contentType: "application/json; charset=utf-8",
             cache: false,
             beforeSend: function () {
