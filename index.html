@@ -28,7 +28,9 @@
 	<script type="text/javascript" charset="utf-8">
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
-        navigator.splashscreen.hide();
+        setTimeout(function() {
+			navigator.splashscreen.hide();
+		}, 3000);
     }
     </script>
 	
