@@ -1,6 +1,8 @@
 ﻿var spinner;
 $(document).ready(function () {
-    getSpinner();
+    navigator.splashscreen.hide();
+	
+	getSpinner();
     //spinner.stop();
     $("#spinCont").hide();
 
