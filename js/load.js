@@ -43,18 +43,18 @@ $(document).ready(function () {
 
     $("#member-autocomplete-input").on("input", getMember);
 
-    $("input[type=radio]").on("click", function () {
+    $(".memberSearch").on("click", function () {
         $("#member-autocomplete-input").blur();
         $("#member-autocomplete-input").val("");
         $("#memgridContainer").hide();
 
         if (this.value == "TELEPHONE" || this.value == "MBRSEP" || this.value === "MBRNO") {
-            $(this).prop('type', 'number');
+            $("#member-autocomplete-input").attr('type', 'number');
         }
         else {
-            $(this).prop('type', 'text');
+            $("#member-autocomplete-input").attr('type', '');
         }
-        $(this).focus();
+        $("#member-autocomplete-input").focus();
     });
 
     $("#cancelCheckin").on("click", function () {
