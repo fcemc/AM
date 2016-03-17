@@ -49,10 +49,10 @@ $(document).ready(function () {
         $("#memgridContainer").hide();
 
         if (this.value == "TELEPHONE" || this.value == "MBRSEP" || this.value === "MBRNO") {
-            $("#member-autocomplete-input").attr('type', 'number');
+            $("#member-autocomplete-input").prop('type', 'number');
         }
         else {
-            $("#member-autocomplete-input").attr('type', '');
+            $("#member-autocomplete-input").prop('type', '');
         }
         $("#member-autocomplete-input").focus();
     });
