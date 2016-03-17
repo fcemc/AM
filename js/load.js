@@ -79,8 +79,7 @@ $(document).ready(function () {
     $("#saveCheckin").on("click", function () {
         logMemberIn();
     });
-	
-	navigator.splashscreen.hide();
+		
 });
 
 function getMember() {

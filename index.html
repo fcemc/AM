@@ -25,6 +25,13 @@
     <script src="phonegap.js"></script>
     <script src="cordova.js"></script>
 
+	<script type="text/javascript" charset="utf-8">
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+        navigator.splashscreen.hide();
+    }
+    </script>
+	
 </head>
 <body>
     <div id="spinCont">
