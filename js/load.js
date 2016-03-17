@@ -1,6 +1,6 @@
 ﻿var spinner;
 $(document).ready(function () {
-    navigator.splashscreen.hide();
+    
 	
 	getSpinner();
     //spinner.stop();
@@ -79,6 +79,8 @@ $(document).ready(function () {
     $("#saveCheckin").on("click", function () {
         logMemberIn();
     });
+	
+	navigator.splashscreen.hide();
 });
 
 function getMember() {
