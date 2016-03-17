@@ -45,7 +45,8 @@
   <preference name="show-splash-screen-spinner" value="true" />
   <!-- ios: if set to false, the spinner won't appear on the splash screen during app loading -->
   <preference name="auto-hide-splash-screen"    value="false" />
-  <preference name="splash-screen-duration" value="10000" />
+  <preference name="ShowSplashScreenSpinner" value="false" />
+  <preference name="AutoHideSplashScreen" value="false" />  
   <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
   <preference name="disable-cursor"             value="false" />
   <!-- blackberry: prevents a mouse-icon/cursor from being displayed on the app -->
