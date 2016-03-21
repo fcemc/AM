@@ -3,7 +3,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         xmlns:android   = "http://schemas.android.com/apk/res/android"
-        id        = "com.phonegap.FCEMCam"
+        id        = "com.fcemc.FCEMCapps"
         version   = "1.0.0">
 
   <name>FCEMC-Annual Meeting</name>
@@ -60,6 +60,7 @@
   <!-- Plugins -->
 
   <!-- Core plugins -->
+  <!--<gap:plugin name="com.phonegap.plugins.barcodescanner"/>
   <gap:plugin name="org.apache.cordova.battery-status" />
   <gap:plugin name="org.apache.cordova.camera" />
   <gap:plugin name="org.apache.cordova.media-capture" />
@@ -75,7 +76,7 @@
   <gap:plugin name="org.apache.cordova.globalization" />
   <gap:plugin name="org.apache.cordova.inappbrowser" />
   <gap:plugin name="org.apache.cordova.media" />
-  <gap:plugin name="org.apache.cordova.network-information" />
+  <gap:plugin name="org.apache.cordova.network-information" />-->
   <gap:plugin name="org.apache.cordova.splashscreen" />
   <gap:plugin name="org.apache.cordova.vibration" />
   <gap:plugin name="org.apache.cordova.statusbar" />
@@ -133,7 +134,7 @@
     -->
 
   <!-- Allow links to example.com -->
-  <allow-navigation href="http://example.com/*" />
+  <allow-navigation href="http://gis.fourcty.org/*" />
 
   <!-- Wildcards are allowed for the protocol, as a prefix
      to the host, or as a suffix to the path -->
