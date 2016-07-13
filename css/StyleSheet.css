@@ -1,4 +1,49 @@
 ﻿body {
-    /*font-family:Arial;
-    font-size:small;*/
 }
+
+.hdr{
+    /*background-color: darkseagreen !important;*/
+}
+.redbull{
+    text-align: center;    
+    color:red;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: underline;
+}
+
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+
+h3{
+    color: black;
+}
+
+li{
+    background-color:gainsboro;
+}
+
+.notes{
+    background-color:gainsboro !important;
+    color:black !important;
+}
+
