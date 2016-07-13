@@ -197,8 +197,7 @@ function scan() {
         localStorage.setItem("fcemcInventory_scanning", true);
         cordova.plugins.barcodeScanner.scan(
           function (result) {
-              if (result.cancelled != 1) {
-                  changePage('memSearchPage');
+              if (result.cancelled != 1) {                  
                   getMember(result.text);
               }
               localStorage.setItem("fcemcInventory_scanning", false);
@@ -309,6 +308,7 @@ function changePage(page) {
 function getMember(scanResult) {
     if (scanResult.length != undefined) {
         getMemberInfo("MBRSEP|" + mbrsep);
+        changePage('memSearchPage');
     }
     else {
         if ($("#member-autocomplete-input").val().length >= 3) {
