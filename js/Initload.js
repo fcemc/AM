@@ -307,7 +307,7 @@ function changePage(page) {
 
 function getMember(scanResult) {
     if (scanResult.length != undefined) {
-        getMemberInfo("MBRSEP|" + mbrsep);
+        getMemberInfo("MBRSEP|" + scanResult);
         changePage('memSearchPage');
     }
     else {
