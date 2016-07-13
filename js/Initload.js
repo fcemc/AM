@@ -198,6 +198,7 @@ function scan() {
         cordova.plugins.barcodeScanner.scan(
           function (result) {
               if (result.cancelled != 1) {
+                  changePage('memSearchPage');
                   getMember(result.text);
               }
               localStorage.setItem("fcemcInventory_scanning", false);
