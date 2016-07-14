@@ -188,7 +188,8 @@ function scan() {
         cordova.plugins.barcodeScanner.scan(
           function (result) {
               if (result.cancelled != 1) {                  
-                  getMember(result.text);
+                  //getMember(result.text);
+                  getMemberScanInfo("MBRSEP|" + result.text);
               }
               localStorage.setItem("fcemcInventory_scanning", false);
           },
@@ -301,11 +302,11 @@ function changePage(page) {
 }
 
 function getMember(scanResult) {
-    if (scanResult.length != undefined) {
-        getMemberInfo("MBRSEP|" + scanResult);
-        changePage('memSearchPage');
-    }
-    else {
+    //if (scanResult.length != undefined) {
+    //    getMemberInfo("MBRSEP|" + scanResult);
+    //    changePage('memSearchPage');
+    //}
+    //else {
         if ($("#member-autocomplete-input").val().length >= 3) {
             var v = $("#member-autocomplete-input").val();
             var f;
@@ -320,9 +321,8 @@ function getMember(scanResult) {
             $("#spinCont").hide();
             $("#memgridContainer").hide();
         }
-    }
+    //}
 }
-
 
 function getMemberScanInfo(paramItems) {
     $.ajax({
