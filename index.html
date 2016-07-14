@@ -5,18 +5,16 @@
     <link href="js/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
     <link href="css/MiniDashbaord.css" rel="stylesheet" />
     <link href="css/StyleSheet.css" rel="stylesheet" />
-    <link href="css/jquery.mobile.icons.min.css" rel="stylesheet" />
+    
     <script src="js/jquery-1.12.2.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>
-
-
+    
     <!--Wijmo Widgets CSS-->
     <link href="wijmo/jquery.wijmo-pro.all.css" rel="stylesheet" />
     <!--Wijmo Widgets JavaScript-->
     <script src="wijmo/jquery.wijmo-open.all.min.js"></script>
     <script src="wijmo/jquery.wijmo-pro.all.min.js"></script>
-
-    <link rel="stylesheet" href="css/themes/my-custom-theme.css" />
+        
     <script src="js/toastr.min.js"></script>
     <link href="content/toastr.min.css" rel="stylesheet" />
     
@@ -52,8 +50,12 @@
         <div role="main" class="ui-content">
             <div style="text-align:center;">
                 <!--<a href="#" onclick="scan();" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" data-transition="flow">Scan</a>-->
-                <input type="button" value="Scan to Lookup" onclick="scan();" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b">
-                <input type="button" value="Manual Lookup" onclick="changePage('memSearchPage');" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b">
+                <!--<input type="button" style="background-color: #0D914F;" value="Scan to Lookup" onclick="scan();" class="ui-btn ui-corner-all">
+                <input type="button" style="background-color: #0D914F;" value="Manual Lookup" onclick="changePage('memSearchPage');" class="ui-btn ui-corner-all">-->
+
+                <a style="background-color: #0D914F;" href="" onclick="scan();" class="ui-btn ui-corner-all">Scan to Lookup</a>
+                <a style="background-color: #0D914F;" href="#memSearchPage" class="ui-btn ui-corner-all">Manual Lookup</a>
+
                 <label style="color:black" id="scanText"></label>
             </div>
         </div>
@@ -89,7 +91,7 @@
             <div style="font-size:10px;" id="memgridContainer">
                 <table id="memgrid"></table>
             </div>
-            <a href="#page1" class="ui-btn ui-corner-all">Back to Main Page</a>
+            <a style="background-color: #0D914F;" href="#page1" class="ui-btn ui-corner-all">Back to Main Page</a>
         </div>
     </div>
 
@@ -97,7 +99,7 @@
         <div class="header" data-role="header">
             <h1>Member Check In</h1>
         </div>
-        <div id="memberData" style="text-align: center;"></div>
+        <div id="memberData" style="color: black; text-align: center;"></div>
         <form class="ui-filterable">
             <div style="text-align: center;">
                 <fieldset data-role="controlgroup" data-type="horizontal">
@@ -123,9 +125,9 @@
             </div>
         </div>      
         <div data-role="header">
-            <button id="cancelCheckin" class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cancel</button>
+            <button id="cancelCheckin" style="background-color: red;" class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cancel</button>
             <h1></h1>
-            <button id="saveCheckin" class="ui-btn-right ui-btn ui-btn-c ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>
+            <button id="saveCheckin" style="background-color: lawngreen; text-shadow:1px 1px 4px black" class="ui-btn-right ui-btn ui-btn-c ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>
         </div>
     </div>
 
