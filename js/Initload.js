@@ -46,8 +46,8 @@ $(document).ready(function () {
         allowSorting: false,
         scrollMode: "auto",
         columns: [
-           { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
-           { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
+           { visible: false },
+           { visible: false },
            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
@@ -64,16 +64,7 @@ $(document).ready(function () {
                     var value = args.cell.value();
                     memData.push(title + "|" + value);
                 }
-
-                //$("body").pagecontainer("change", "#checkInPage", {
-                //    transition: 'flip',
-                //    changeHash: false,
-                //    reverse: true,
-                //    showLoadMsg: true
-                //});
-
                 changePage('checkInPage');
-
                 beginCheckIn(memData);
             }
         }
@@ -302,7 +293,12 @@ function fakeCallback() { }
 
 //manual lookup region
 function changePage(page) {
-    $.mobile.pageContainer.pagecontainer("change", "#" + page);
+    $.mobile.pageContainer.pagecontainer("change", "#" + page, {
+            transition: 'flip',
+            changeHash: false,
+            reverse: true,
+            showLoadMsg: true
+        });
 }
 
 function getMember(scanResult) {
@@ -341,13 +337,17 @@ function getMemberInfo(paramItems) {
             var results = result.MEMBERLISTResult;
             var data = [];
             for (var i = 0; i < results.length; i++) {
-                data.push({ NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, METER: results[i].METER, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE, MAPNUMBER: results[i].MAPNUMBER })
+                data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
             }
             $("#memgridContainer").show();
             $("#memgrid").wijgrid("option", "data", data);
 
+            //var cols = $("#memgrid").wijgrid("columns");
+            //cols[0].option("visible", false);
+            //cols[1].option("visible", false);
+            
+            
             $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
-
 
         },
         complete: function () {
