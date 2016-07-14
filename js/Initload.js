@@ -345,6 +345,10 @@ function getMemberInfo(paramItems) {
             }
             $("#memgridContainer").show();
             $("#memgrid").wijgrid("option", "data", data);
+
+            $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
+
+
         },
         complete: function () {
             $("#spinCont").hide();
