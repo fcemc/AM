@@ -30,7 +30,6 @@ $(document).ready(function () {
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
-
     }
     else {
         if (navigator.notification.confirm("No network connection detected, check settings and try again!", networkIssue, "Please Confirm:", "Cancel, Ok")) {
@@ -324,6 +323,37 @@ function getMember(scanResult) {
     }
 }
 
+
+function getMemberScanInfo(paramItems) {
+    $.ajax({
+        type: "GET",
+        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + paramItems,
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
+        success: function (result) {
+            var results = result.MEMBERLISTResult;            
+            if (results.length == 0) {
+                var memData = [];
+                //memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
+                memData.push({ NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
+                changePage('checkInPage');
+                beginCheckIn(memData);
+            }
+            changePage('page1');
+        },
+        complete: function () {
+            $("#spinCont").hide();
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
+}
+
 function getMemberInfo(paramItems) {
     $.ajax({
         type: "GET",
@@ -340,15 +370,8 @@ function getMemberInfo(paramItems) {
                 data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
             }
             $("#memgridContainer").show();
-            $("#memgrid").wijgrid("option", "data", data);
-
-            //var cols = $("#memgrid").wijgrid("columns");
-            //cols[0].option("visible", false);
-            //cols[1].option("visible", false);
-            
-            
+            $("#memgrid").wijgrid("option", "data", data);            
             $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
-
         },
         complete: function () {
             $("#spinCont").hide();
@@ -359,7 +382,6 @@ function getMemberInfo(paramItems) {
         }
     });
 }
-
 function beginCheckIn(memData) {
     for (var i = 0; i < memData.length; i++) {
         $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>")
@@ -371,7 +393,6 @@ function resetForm() {
     $("#memgridContainer").hide();
     $("body").pagecontainer("change", "#page1");
 }
-
 function logMemberIn() {
     var _vote = "";
     $("input.memberCheckIn[type=radio]").each(function () {
