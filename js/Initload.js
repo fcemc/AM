@@ -336,14 +336,14 @@ function getMemberScanInfo(paramItems) {
             var results = result.MEMBERLISTSCANResult;
             if (results.length == 1) {
                 var string = "";
-                string += "<div><b>NAME</b>: <label  style='display:inline-block' id='logmem_NAME>" + results[0].NAME.toString() + "</label></div>";
-                string += "<div><b>PHONE</b>: <label  style='display:inline-block' id='logmem_PHONE>" + results[0].PHONE.toString() + "</label></div>";
-                string += "<div><b>MEMBERNO</b>: <label  style='display:inline-block' id='logmem_MEMBERNO>" + results[0].MEMBERNO.toString() + "</label></div>";
-                string += "<div><b>MEMBERSEP</b>: <label  style='display:inline-block' id='logmem_MEMBERSEP>" + results[0].MEMBERSEP.toString() + "</label></div>";
-                string += "<div><b>BILLADDR</b>: <label  style='display:inline-block' id='logmem_BILLADDR>" + results[0].BILLADDR.toString() + "</label></div>";
-                string += "<div><b>SERVADDR</b>: <label  style='display:inline-block' id='logmem_SERVADDR>" + results[0].SERVADDR.toString() + "</label></div>";
-                string += "<div><b>MAPNUMBER</b>: <label  style='display:inline-block' id='logmem_MAPNUMBER>" + results[0].MAPNUMBER.toString() + "</label></div>";
-                string += "<div><b>METER</b>: <label  style='display:inline-block' id='logmem_METER>" + results[0].METER.toString() + "</label></div>";
+                string += "<div><b>NAME: </b><label style='display:inline-block' id='logmem_NAME>" + results[0].NAME.toString() + "</label></div>";
+                string += "<div><b>PHONE: </b><label style='display:inline-block' id='logmem_PHONE>" + results[0].PHONE.toString() + "</label></div>";
+                string += "<div><b>MEMBERNO: </b><label style='display:inline-block' id='logmem_MEMBERNO>" + results[0].MEMBERNO.toString() + "</label></div>";
+                string += "<div><b>MEMBERSEP: </b><label style='display:inline-block' id='logmem_MEMBERSEP>" + results[0].MEMBERSEP.toString() + "</label></div>";
+                string += "<div><b>BILLADDR: </b><label style='display:inline-block' id='logmem_BILLADDR>" + results[0].BILLADDR.toString() + "</label></div>";
+                string += "<div><b>SERVADDR: </b><label style='display:inline-block' id='logmem_SERVADDR>" + results[0].SERVADDR.toString() + "</label></div>";
+                string += "<div><b>MAPNUMBER: </b><label style='display:inline-block' id='logmem_MAPNUMBER>" + results[0].MAPNUMBER.toString() + "</label></div>";
+                string += "<div><b>METER: </b><label style='display:inline-block' id='logmem_METER>" + results[0].METER.toString() + "</label></div>";
 
                 $("#memberData").empty();
                 $("#memberData").append(string);
