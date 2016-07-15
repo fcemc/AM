@@ -337,7 +337,7 @@ function getMemberScanInfo(paramItems) {
             var memData = [];
             if (results.length == 1) {                
                 //memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
-                memData.push({ NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
+                memData.push({ NAME: results[0].NAME, MEMBERNO: results[0].MEMBERNO, MEMBERSEP: results[0].MEMBERSEP, BILLADDR: results[0].BILLADDR, SERVADDR: results[0].SERVADDR, PHONE: results[0].PHONE });
                 changePage('checkInPage');
                 beginCheckIn(memData);
             }
