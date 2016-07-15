@@ -187,9 +187,8 @@ function scan() {
         localStorage.setItem("fcemcInventory_scanning", true);
         cordova.plugins.barcodeScanner.scan(
           function (result) {
-              if (result.cancelled != 1) {                  
-                  //getMember(result.text);
-                  getMemberScanInfo("MBRSEP|" + result.text);
+              if (result.cancelled != 1) {                                    
+                  getMemberScanInfo(result.text);
               }
               localStorage.setItem("fcemcInventory_scanning", false);
           },
@@ -335,22 +334,20 @@ function getMemberScanInfo(paramItems) {
         },
         success: function (result) {
             var results = result.MEMBERLISTSCANResult;
-            if (results.length == 1) {
-                var memData = [];
+            var memData = [];
+            if (results.length == 1) {                
                 //memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
                 memData.push({ NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
                 changePage('checkInPage');
                 beginCheckIn(memData);
             }
             else if (results.length > 1) {
-                //just in case there are duplicate MBRSEP numbers
-                var results = result.MEMBERLISTResult;
-                var data = [];
+                //just in case there are duplicate MBRSEP numbers                                
                 for (var i = 0; i < results.length; i++) {
-                    data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
+                    memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
                 }
                 $("#memgridContainer").show();
-                $("#memgrid").wijgrid("option", "data", data);
+                $("#memgrid").wijgrid("option", "data", memData);
                 $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
             }
         },
