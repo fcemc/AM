@@ -187,7 +187,7 @@ function scan() {
         localStorage.setItem("fcemcInventory_scanning", true);
         cordova.plugins.barcodeScanner.scan(
           function (result) {
-              if (result.cancelled != 1) {                                    
+              if (result.cancelled != 1) {
                   getMemberScanInfo(result.text);
               }
               localStorage.setItem("fcemcInventory_scanning", false);
@@ -293,11 +293,11 @@ function fakeCallback() { }
 //manual lookup region
 function changePage(page) {
     $.mobile.pageContainer.pagecontainer("change", "#" + page, {
-            transition: 'flip',
-            changeHash: false,
-            reverse: true,
-            showLoadMsg: true
-        });
+        transition: 'flip',
+        changeHash: false,
+        reverse: true,
+        showLoadMsg: true
+    });
 }
 
 function getMember(scanResult) {
@@ -306,20 +306,20 @@ function getMember(scanResult) {
     //    changePage('memSearchPage');
     //}
     //else {
-        if ($("#member-autocomplete-input").val().length >= 3) {
-            var v = $("#member-autocomplete-input").val();
-            var f;
-            $("input.memberSearch[type=radio]").each(function () {
-                if (this.checked === true) {
-                    f = this.value;
-                }
-            });
-            getMemberInfo(f + "|" + v);
-        }
-        else if ($("#member-autocomplete-input").val().length === 0) {
-            $("#spinCont").hide();
-            $("#memgridContainer").hide();
-        }
+    if ($("#member-autocomplete-input").val().length >= 3) {
+        var v = $("#member-autocomplete-input").val();
+        var f;
+        $("input.memberSearch[type=radio]").each(function () {
+            if (this.checked === true) {
+                f = this.value;
+            }
+        });
+        getMemberInfo(f + "|" + v);
+    }
+    else if ($("#member-autocomplete-input").val().length === 0) {
+        $("#spinCont").hide();
+        $("#memgridContainer").hide();
+    }
     //}
 }
 
@@ -335,11 +335,19 @@ function getMemberScanInfo(paramItems) {
         success: function (result) {
             var results = result.MEMBERLISTSCANResult;
             var memData = [];
-            if (results.length == 1) {                
-                //memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
-                memData.push({ NAME: results[0].NAME, MEMBERNO: results[0].MEMBERNO, MEMBERSEP: results[0].MEMBERSEP, BILLADDR: results[0].BILLADDR, SERVADDR: results[0].SERVADDR, PHONE: results[0].PHONE });
+            $("#memberData").empty();
+
+            if (results.length == 1) {
+                $("#memberData").append("<div><b>NAME</b>: <label  style='display:inline-block' id='logmem_NAME>" + results[0].NAME + "</label></div>");
+                $("#memberData").append("<div><b>PHONE</b>: <label  style='display:inline-block' id='logmem_PHONE>" + results[0].PHONE + "</label></div>");
+                $("#memberData").append("<div><b>MEMBERNO</b>: <label  style='display:inline-block' id='logmem_MEMBERNO>" + results[0].MEMBERNO + "</label></div>");
+                $("#memberData").append("<div><b>MEMBERSEP</b>: <label  style='display:inline-block' id='logmem_MEMBERSEP>" + results[0].MEMBERSEP + "</label></div>");
+                $("#memberData").append("<div><b>BILLADDR</b>: <label  style='display:inline-block' id='logmem_BILLADDR>" + results[0].BILLADDR + "</label></div>");
+                $("#memberData").append("<div><b>SERVADDR</b>: <label  style='display:inline-block' id='logmem_SERVADDR>" + results[0].SERVADDR + "</label></div>");
+                $("#memberData").append("<div><b>MAPNUMBER</b>: <label  style='display:inline-block' id='logmem_MAPNUMBER>" + results[0].MAPNUMBER + "</label></div>");
+                $("#memberData").append("<div><b>METER</b>: <label  style='display:inline-block' id='logmem_METER>" + results[0].METER + "</label></div>");
                 changePage('checkInPage');
-                beginCheckIn(memData);
+
             }
             else if (results.length > 1) {
                 //just in case there are duplicate MBRSEP numbers                                
@@ -377,7 +385,7 @@ function getMemberInfo(paramItems) {
                 data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
             }
             $("#memgridContainer").show();
-            $("#memgrid").wijgrid("option", "data", data);            
+            $("#memgrid").wijgrid("option", "data", data);
             $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
         },
         complete: function () {
@@ -391,7 +399,7 @@ function getMemberInfo(paramItems) {
 }
 function beginCheckIn(memData) {
     for (var i = 0; i < memData.length; i++) {
-        $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>")
+        $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>");
     }
 }
 function resetForm() {
