@@ -327,7 +327,7 @@ function getMember(scanResult) {
 function getMemberScanInfo(paramItems) {
     $.ajax({
         type: "GET",
-        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + paramItems,
+        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLISTSCAN/" + paramItems,
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
@@ -342,7 +342,17 @@ function getMemberScanInfo(paramItems) {
                 changePage('checkInPage');
                 beginCheckIn(memData);
             }
-            changePage('page1');
+            else if (results.length > 1) {
+                //just in case there are duplicate MBRSEP numbers
+                var results = result.MEMBERLISTResult;
+                var data = [];
+                for (var i = 0; i < results.length; i++) {
+                    data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
+                }
+                $("#memgridContainer").show();
+                $("#memgrid").wijgrid("option", "data", data);
+                $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
+            }
         },
         complete: function () {
             $("#spinCont").hide();
