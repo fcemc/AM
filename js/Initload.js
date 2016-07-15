@@ -333,24 +333,22 @@ function getMemberScanInfo(paramItems) {
             $("#spinCont").show();
         },
         success: function (result) {
-            var results = result.MEMBERLISTSCANResult;
-            var memData = [];
-            $("#memberData").empty();
-
+            var results = result.MEMBERLISTSCANResult;            
             if (results.length == 1) {
-                $("#memberData").append("<div><b>NAME</b>: <label  style='display:inline-block' id='logmem_NAME>" + results[0].NAME + "</label></div>");
-                $("#memberData").append("<div><b>PHONE</b>: <label  style='display:inline-block' id='logmem_PHONE>" + results[0].PHONE + "</label></div>");
-                $("#memberData").append("<div><b>MEMBERNO</b>: <label  style='display:inline-block' id='logmem_MEMBERNO>" + results[0].MEMBERNO + "</label></div>");
-                $("#memberData").append("<div><b>MEMBERSEP</b>: <label  style='display:inline-block' id='logmem_MEMBERSEP>" + results[0].MEMBERSEP + "</label></div>");
-                $("#memberData").append("<div><b>BILLADDR</b>: <label  style='display:inline-block' id='logmem_BILLADDR>" + results[0].BILLADDR + "</label></div>");
-                $("#memberData").append("<div><b>SERVADDR</b>: <label  style='display:inline-block' id='logmem_SERVADDR>" + results[0].SERVADDR + "</label></div>");
-                $("#memberData").append("<div><b>MAPNUMBER</b>: <label  style='display:inline-block' id='logmem_MAPNUMBER>" + results[0].MAPNUMBER + "</label></div>");
-                $("#memberData").append("<div><b>METER</b>: <label  style='display:inline-block' id='logmem_METER>" + results[0].METER + "</label></div>");
+                $("#memberData").empty();
+                $("#memberData").append("<div><b>NAME</b>: <label  style='display:inline-block' id='logmem_NAME>" + results[0].NAME.toString() + "</label></div>");
+                $("#memberData").append("<div><b>PHONE</b>: <label  style='display:inline-block' id='logmem_PHONE>" + results[0].PHONE.toString() + "</label></div>");
+                $("#memberData").append("<div><b>MEMBERNO</b>: <label  style='display:inline-block' id='logmem_MEMBERNO>" + results[0].MEMBERNO.toString() + "</label></div>");
+                $("#memberData").append("<div><b>MEMBERSEP</b>: <label  style='display:inline-block' id='logmem_MEMBERSEP>" + results[0].MEMBERSEP.toString() + "</label></div>");
+                $("#memberData").append("<div><b>BILLADDR</b>: <label  style='display:inline-block' id='logmem_BILLADDR>" + results[0].BILLADDR.toString() + "</label></div>");
+                $("#memberData").append("<div><b>SERVADDR</b>: <label  style='display:inline-block' id='logmem_SERVADDR>" + results[0].SERVADDR.toString() + "</label></div>");
+                $("#memberData").append("<div><b>MAPNUMBER</b>: <label  style='display:inline-block' id='logmem_MAPNUMBER>" + results[0].MAPNUMBER.toString() + "</label></div>");
+                $("#memberData").append("<div><b>METER</b>: <label  style='display:inline-block' id='logmem_METER>" + results[0].METER.toString() + "</label></div>");
                 changePage('checkInPage');
-
             }
             else if (results.length > 1) {
-                //just in case there are duplicate MBRSEP numbers                                
+                //just in case there are duplicate MBRSEP numbers        
+                var memData = [];
                 for (var i = 0; i < results.length; i++) {
                     memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
                 }
