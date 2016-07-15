@@ -210,47 +210,6 @@ function scan() {
     }
 }
 
-//function getScanMember(mbrsep) {
-//    var paramItems = "MBRSEP|" + mbrsep;
-//    $.ajax({
-//        type: "GET",
-//        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + paramItems,
-//        contentType: "application/json; charset=utf-8",
-//        cache: false,
-//        beforeSend: function () {
-//            //$("#scanText").text("");
-//            $("#spinCont").show();
-//        },
-//        success: function (result) {
-
-//            var results = result.MEMBERLISTResult;
-//            var string = "";
-
-//            if (results.length > 0) {
-//                string = "NAME: " + results[0].NAME + "\n" +
-//                    "MEMBERNO: " + results[0].MEMBERNO + "\n" +
-//                    "MEMBERSEP: " + results[0].MEMBERSEP + "\n" +
-//                    "BILLADDR: " + results[0].BILLADDR + "\n" +
-//                    "SERVADDR: " + results[0].SERVADDR + "\n" +
-//                    "PHONE: " + results[0].PHONE + "\n" +
-//                     "MAPNUMBER: " + results[0].MAPNUMBER;
-//            }
-//            else {
-//                string = mbrsep;
-//            }
-//            $("#scanText").text(string);
-//            $("#spinCont").hide();
-//        },
-//        complete: function () {
-//            $("#spinCont").hide();
-//        },
-//        error: function (textStatus, errorThrown) {
-//            var txt = textStatus;
-//            var et = errorThrown;
-//        }
-//    });
-//}
-
 function getSpinner() {
     var opts = {
         lines: 12             // The number of lines to draw
@@ -334,18 +293,8 @@ function getMemberScanInfo(paramItems) {
         },
         success: function (result) {
             var results = result.MEMBERLISTSCANResult;
+            $("#memberData").empty();
             if (results.length == 1) {
-                //var string = "";
-                //string += "<div><b>NAME: </b><label style='display:inline-block' id='logmem_NAME>" + results[0].NAME.toString() + "</label></div>";
-                //string += "<div><b>PHONE: </b><label style='display:inline-block' id='logmem_PHONE>" + results[0].PHONE.toString() + "</label></div>";
-                //string += "<div><b>MEMBERNO: </b><label style='display:inline-block' id='logmem_MEMBERNO>" + results[0].MEMBERNO.toString() + "</label></div>";
-                //string += "<div><b>MEMBERSEP: </b><label style='display:inline-block' id='logmem_MEMBERSEP>" + results[0].MEMBERSEP.toString() + "</label></div>";
-                //string += "<div><b>BILLADDR: </b><label style='display:inline-block' id='logmem_BILLADDR>" + results[0].BILLADDR.toString() + "</label></div>";
-                //string += "<div><b>SERVADDR: </b><label style='display:inline-block' id='logmem_SERVADDR>" + results[0].SERVADDR.toString() + "</label></div>";
-                //string += "<div><b>MAPNUMBER: </b><label style='display:inline-block' id='logmem_MAPNUMBER>" + results[0].MAPNUMBER.toString() + "</label></div>";
-                //string += "<div><b>METER: </b><label style='display:inline-block' id='logmem_METER>" + results[0].METER.toString() + "</label></div>";
-
-
                 var memData = [];
                 memData.push("NAME|" + results[0].NAME.toString());
                 memData.push("PHONE|" + results[0].PHONE.toString());
