@@ -49,13 +49,9 @@
         </div>
         <div role="main" class="ui-content">
             <div style="text-align:center;">
-                <!--<a href="#" onclick="scan();" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" data-transition="flow">Scan</a>-->
-                <!--<input type="button" style="background-color: #0D914F;" value="Scan to Lookup" onclick="scan();" class="ui-btn ui-corner-all">
-                <input type="button" style="background-color: #0D914F;" value="Manual Lookup" onclick="changePage('memSearchPage');" class="ui-btn ui-corner-all">-->
-
                 <a style="background-color: #0D914F;" href="" onclick="scan();" class="ui-btn ui-corner-all">Scan to Lookup</a>
                 <a style="background-color: #0D914F;" href="#memSearchPage" class="ui-btn ui-corner-all">Manual Lookup</a>
-
+                <a style="background-color: #0D914F;" href="#statsPage" onclick="getStats();" class="ui-btn ui-corner-all">Stats</a>
                 <label style="color:black" id="scanText"></label>
             </div>
         </div>
@@ -87,7 +83,6 @@
                 </div>
                 <input type="number" autocomplete="off" id="member-autocomplete-input" data-type="search" placeholder="Member Search...">                
             </form>
-
             <div style="font-size:12px;" id="memgridContainer">
                 <table id="memgrid"></table>
             </div>
@@ -131,12 +126,13 @@
         </div>
     </div>
 
-    <div data-role="page" id="addMemPage">
+    <div data-role="page" id="statsPage">
         <div data-role="header">
-            <h1>Add Member</h1>
+            <h1>Meeting Stats</h1>            
         </div>
         <div role="main" class="ui-content">
-            <a href="#page1" class="ui-btn ui-corner-all">Back to Main Page</a>
+            <div id="statsData" style="color: black; text-align: center;"></div>
+            <a style="background-color: #0D914F;" href="#page1" class="ui-btn ui-corner-all">Back to Main Page</a>
         </div>
     </div>
 
