@@ -55,16 +55,22 @@ $(document).ready(function () {
         ],
         cellClicked: function (e, args) {
             if (args.cell._wijgrid != null) {
-                $("#memberData").empty();
-                var memData = [];
-                for (var m = 0; m < $("#memgrid").wijgrid("columns").length; m++) {
-                    args.cell._ci = m;
-                    var title = args.cell.column().headerText;
-                    var value = args.cell.value();
-                    memData.push(title + "|" + value);
+                args.cell._ci = 0;                
+                if (args.cell.value() == "0") {
+                    $("#memberData").empty();
+                    var memData = [];
+                    for (var m = 1; m < $("#memgrid").wijgrid("columns").length; m++) {
+                        args.cell._ci = m;
+                        var title = args.cell.column().headerText;
+                        var value = args.cell.value();
+                        memData.push(title + "|" + value);
+                    }
+                    changePage('checkInPage');
+                    beginCheckIn(memData);
                 }
-                changePage('checkInPage');
-                beginCheckIn(memData);
+                else {
+                    alert("Member already registered");
+                }
             }
         }
     });
@@ -260,11 +266,6 @@ function changePage(page) {
 }
 
 function getMember(scanResult) {
-    //if (scanResult.length != undefined) {
-    //    getMemberInfo("MBRSEP|" + scanResult);
-    //    changePage('memSearchPage');
-    //}
-    //else {
     if ($("#member-autocomplete-input").val().length >= 3) {
         var v = $("#member-autocomplete-input").val();
         var f;
@@ -279,10 +280,9 @@ function getMember(scanResult) {
         $("#spinCont").hide();
         $("#memgridContainer").hide();
     }
-    //}
 }
 
-function getMemberScanInfo(paramItems) {
+function getMemberScanInfo(paramItems) {    
     $.ajax({
         type: "GET",
         url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLISTSCAN/" + paramItems,
@@ -295,27 +295,57 @@ function getMemberScanInfo(paramItems) {
             var results = result.MEMBERLISTSCANResult;
             $("#memberData").empty();
             if (results.length == 1) {
-                var memData = [];
-                memData.push("NAME|" + results[0].NAME.toString());
-                memData.push("PHONE|" + results[0].PHONE.toString());
-                memData.push("MEMBERNO|" + results[0].NAME.toString());
-                memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
-                memData.push("BILLADDR|" + results[0].BILLADDR.toString());
-                memData.push("SERVADDR|" + results[0].SERVADDR.toString());
-                memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
-                memData.push("METER|" + results[0].METER.toString());
-                beginCheckIn(memData);
-                
-                changePage('checkInPage');
+                if (results[0].VOTE.toString() == "0") {
+                    var memData = [];
+                    memData.push("NAME|" + results[0].NAME.toString());
+                    memData.push("PHONE|" + results[0].PHONE.toString());
+                    memData.push("MEMBERNO|" + results[0].NAME.toString());
+                    memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
+                    memData.push("BILLADDR|" + results[0].BILLADDR.toString());
+                    memData.push("SERVADDR|" + results[0].SERVADDR.toString());
+                    memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
+                    memData.push("METER|" + results[0].METER.toString());
+                    beginCheckIn(memData);
+
+                    changePage('checkInPage');
+                }
             }
             else if (results.length > 1) {
                 //just in case there are duplicate MBRSEP numbers        
                 var memData = [];
                 for (var i = 0; i < results.length; i++) {
-                    memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
+                    memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
                 }
                 $("#memgridContainer").show();
                 $("#memgrid").wijgrid("option", "data", memData);
+                $("#memgrid").wijgrid({
+                    columns: [
+                            { visible: false },
+                            { visible: false },
+                            {
+                                cellFormatter: function (args) {
+                                    if (args.formattedValue == 1) {
+                                        if (args.row.type & $.wijmo.wijgrid.rowType.data) { // data row (not group header) 
+                                            var img = $("<img/>")
+                                                .attr("src", "img/check24x24.png") // flag url 
+                                            //.attr("height", "100");         // image size 
+                                            args.$container
+                                                .css("text-align", "center")    // center the flag 
+                                                .empty()                        // remove original content 
+                                                .append(img);                   // add image element 
+                                            return true;                        // content has been customized 
+                                        }
+                                    }
+                                    else if (args.formattedValue == 0) {
+                                        args.$container
+                                                .css("text-align", "center")    // center the flag 
+                                                .empty()                        // remove original content 
+                                                .append(img);                   // add image element 
+                                        return true;                        // content has been customized 
+                                    }
+                                }
+                            }]
+                });
                 $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
             }
         },
@@ -342,10 +372,38 @@ function getMemberInfo(paramItems) {
             var results = result.MEMBERLISTResult;
             var data = [];
             for (var i = 0; i < results.length; i++) {
-                data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
+                data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
             }
             $("#memgridContainer").show();
             $("#memgrid").wijgrid("option", "data", data);
+            $("#memgrid").wijgrid({
+                columns: [ 
+                        { visible: false },
+                        { visible: false },
+                        { 
+                            cellFormatter: function (args) {
+                                if (args.formattedValue == 1) {
+                                    if (args.row.type & $.wijmo.wijgrid.rowType.data) { // data row (not group header) 
+                                        var img = $("<img/>")
+                                            .attr("src", "img/check24x24.png") // flag url 
+                                        //.attr("height", "100");         // image size 
+                                        args.$container
+                                            .css("text-align", "center")    // center the flag 
+                                            .empty()                        // remove original content 
+                                            .append(img);                   // add image element 
+                                        return true;                        // content has been customized 
+                                    }
+                                }
+                                else if (args.formattedValue == 0) {
+                                    args.$container
+                                            .css("text-align", "center")    // center the flag 
+                                            .empty()                        // remove original content 
+                                            .append(img);                   // add image element 
+                                    return true;                        // content has been customized 
+                                }
+                            } 
+                        }]
+                });
             $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
         },
         complete: function () {
@@ -357,17 +415,20 @@ function getMemberInfo(paramItems) {
         }
     });
 }
+
 function beginCheckIn(memData) {
     for (var i = 0; i < memData.length; i++) {
         $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>");
     }
 }
+
 function resetForm() {
     $("input.memberCheckIn[type=radio]").prop('checked', false).checkboxradio("refresh");
     $("#member-autocomplete-input").val("");
     $("#memgridContainer").hide();
     $("body").pagecontainer("change", "#page1");
 }
+
 function logMemberIn() {
     var _vote = "";
     $("input.memberCheckIn[type=radio]").each(function () {
@@ -415,6 +476,33 @@ function logMemberIn() {
         $("#popuppopupCheckinError p").text("You need to make a selection!");
         $("#popuppopupCheckinError").popup("open");
     }
+}
+
+function getStats() {
+        $.ajax({
+            type: "GET",
+            url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEETINGSTATS",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            beforeSend: function () {
+                $("#spinCont").show();
+            },
+            success: function (result) {
+                $("#statsData").empty();
+                var results = result.MEETINGSTATSResult;
+                var strg = "<div><b>SINGLE</b>: " + results[0].SINGLE + "</div>";
+                strg += "<div><b>DUAL</b>: " + results[0].DUAL + "</div>";
+                strg += "<div><b>PROXY</b>: " + results[0].PROXY + "</div>";
+                $("#statsData").append(strg);
+            },
+            complete: function () {
+                $("#spinCont").hide();
+            },
+            error: function (textStatus, errorThrown) {
+                var txt = textStatus;
+                var et = errorThrown;
+            }
+        });
 }
 
 //endregion
