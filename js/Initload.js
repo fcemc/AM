@@ -322,11 +322,11 @@ function getMemberScanInfo(paramItems) {
                 if (results[0].VOTE.toString() == "0") {
                     var memData = [];
                     memData.push("NAME|" + results[0].NAME.toString());
-                    memData.push("PHONE|" + results[0].PHONE.toString());
                     memData.push("MEMBERNO|" + results[0].MEMBERNO.toString());
                     memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
                     memData.push("BILLADDR|" + results[0].BILLADDR.toString());
                     memData.push("SERVADDR|" + results[0].SERVADDR.toString());
+                    memData.push("PHONE|" + results[0].PHONE.toString());
                     //memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
                     //memData.push("METER|" + results[0].METER.toString());
                     beginCheckIn(memData);
