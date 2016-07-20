@@ -45,11 +45,11 @@ $(document).ready(function () {
         allowSorting: false,
         scrollMode: "auto",
         columns: [
-            { visible: false },
-            { visible: false },
+            //{ visible: false },
+            //{ visible: false },
             {
                 cellFormatter: function (args) {
-                    if (args.formattedValue == 1) {
+                    if (args.formattedValue == 1) {  
                         if (args.row.type & $.wijmo.wijgrid.rowType.data) { // data row (not group header) 
                             var img = $("<img/>")
                                 .attr("src", "img/check24x24.png") // flag url 
@@ -70,7 +70,6 @@ $(document).ready(function () {
                     }
                 }
             },
-            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
@@ -328,8 +327,8 @@ function getMemberScanInfo(paramItems) {
                     memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
                     memData.push("BILLADDR|" + results[0].BILLADDR.toString());
                     memData.push("SERVADDR|" + results[0].SERVADDR.toString());
-                    memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
-                    memData.push("METER|" + results[0].METER.toString());
+                    //memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
+                    //memData.push("METER|" + results[0].METER.toString());
                     beginCheckIn(memData);
 
                     changePage('checkInPage');
@@ -401,7 +400,8 @@ function getMemberInfo(paramItems) {
             var results = result.MEMBERLISTResult;
             var data = [];
             for (var i = 0; i < results.length; i++) {
-                data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
+                //data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
+                data.push({ VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
             }
             $("#memgridContainer").show();
             $("#memgrid").wijgrid("option", "data", data);
