@@ -69,7 +69,8 @@ $(document).ready(function () {
                     beginCheckIn(memData);
                 }
                 else {
-                    alert("Member already registered");
+                    //alert("Member already registered");
+                    navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
                 }
             }
         }
@@ -308,6 +309,10 @@ function getMemberScanInfo(paramItems) {
                     beginCheckIn(memData);
 
                     changePage('checkInPage');
+                }
+                else if (results[0].VOTE.toString() != "0") {
+                    //alert("Member already registered");
+                    navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
                 }
             }
             else if (results.length > 1) {
