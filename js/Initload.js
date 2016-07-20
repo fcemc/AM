@@ -45,17 +45,41 @@ $(document).ready(function () {
         allowSorting: false,
         scrollMode: "auto",
         columns: [
-           { visible: false },
-           { visible: false },
-           { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
-           { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
-           { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
-           { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
-           { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true }
+            { visible: false },
+            { visible: false },
+            {
+                cellFormatter: function (args) {
+                    if (args.formattedValue == 1) {
+                        if (args.row.type & $.wijmo.wijgrid.rowType.data) { // data row (not group header) 
+                            var img = $("<img/>")
+                                .attr("src", "img/check24x24.png") // flag url 
+                            //.attr("height", "100");         // image size 
+                            args.$container
+                                .css("text-align", "center")    // center the flag 
+                                .empty()                        // remove original content 
+                                .append(img);                   // add image element 
+                            return true;                        // content has been customized 
+                        }
+                    }
+                    else if (args.formattedValue == 0) {
+                        args.$container
+                                .css("text-align", "center")    // center the flag 
+                                .empty()                        // remove original content 
+                                .append(img);                   // add image element 
+                        return true;                        // content has been customized 
+                    }
+                }
+            },
+            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
+            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
+            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
+            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
+            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
+            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true }
         ],
         cellClicked: function (e, args) {
             if (args.cell._wijgrid != null) {
-                args.cell._ci = 0;                
+                args.cell._ci = 0;
                 if (args.cell.value() == "0") {
                     $("#memberData").empty();
                     var memData = [];
@@ -283,7 +307,7 @@ function getMember(scanResult) {
     }
 }
 
-function getMemberScanInfo(paramItems) {    
+function getMemberScanInfo(paramItems) {
     $.ajax({
         type: "GET",
         url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLISTSCAN/" + paramItems,
@@ -381,34 +405,6 @@ function getMemberInfo(paramItems) {
             }
             $("#memgridContainer").show();
             $("#memgrid").wijgrid("option", "data", data);
-            $("#memgrid").wijgrid({
-                columns: [ 
-                        { visible: false },
-                        { visible: false },
-                        { 
-                            cellFormatter: function (args) {
-                                if (args.formattedValue == 1) {
-                                    if (args.row.type & $.wijmo.wijgrid.rowType.data) { // data row (not group header) 
-                                        var img = $("<img/>")
-                                            .attr("src", "img/check24x24.png") // flag url 
-                                        //.attr("height", "100");         // image size 
-                                        args.$container
-                                            .css("text-align", "center")    // center the flag 
-                                            .empty()                        // remove original content 
-                                            .append(img);                   // add image element 
-                                        return true;                        // content has been customized 
-                                    }
-                                }
-                                else if (args.formattedValue == 0) {
-                                    args.$container
-                                            .css("text-align", "center")    // center the flag 
-                                            .empty()                        // remove original content 
-                                            .append(img);                   // add image element 
-                                    return true;                        // content has been customized 
-                                }
-                            } 
-                        }]
-                });
             $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
         },
         complete: function () {
@@ -484,30 +480,30 @@ function logMemberIn() {
 }
 
 function getStats() {
-        $.ajax({
-            type: "GET",
-            url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEETINGSTATS",
-            contentType: "application/json; charset=utf-8",
-            cache: false,
-            beforeSend: function () {
-                $("#spinCont").show();
-            },
-            success: function (result) {
-                $("#statsData").empty();
-                var results = result.MEETINGSTATSResult;
-                var strg = "<div><b>SINGLE</b>: " + results[0].SINGLE + "</div>";
-                strg += "<div><b>DUAL</b>: " + results[0].DUAL + "</div>";
-                strg += "<div><b>PROXY</b>: " + results[0].PROXY + "</div>";
-                $("#statsData").append(strg);
-            },
-            complete: function () {
-                $("#spinCont").hide();
-            },
-            error: function (textStatus, errorThrown) {
-                var txt = textStatus;
-                var et = errorThrown;
-            }
-        });
+    $.ajax({
+        type: "GET",
+        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEETINGSTATS",
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
+        success: function (result) {
+            $("#statsData").empty();
+            var results = result.MEETINGSTATSResult;
+            var strg = "<div><b>SINGLE</b>: " + results[0].SINGLE + "</div>";
+            strg += "<div><b>DUAL</b>: " + results[0].DUAL + "</div>";
+            strg += "<div><b>PROXY</b>: " + results[0].PROXY + "</div>";
+            $("#statsData").append(strg);
+        },
+        complete: function () {
+            $("#spinCont").hide();
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
 }
 
 //endregion
