@@ -324,7 +324,7 @@ function getMemberScanInfo(paramItems) {
                     var memData = [];
                     memData.push("NAME|" + results[0].NAME.toString());
                     memData.push("PHONE|" + results[0].PHONE.toString());
-                    memData.push("MEMBERNO|" + results[0].NAME.toString());
+                    memData.push("MEMBERNO|" + results[0].MEMBERNO.toString());
                     memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
                     memData.push("BILLADDR|" + results[0].BILLADDR.toString());
                     memData.push("SERVADDR|" + results[0].SERVADDR.toString());
