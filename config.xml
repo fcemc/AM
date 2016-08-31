@@ -33,8 +33,8 @@
   
   <preference name="fullscreen"                 value="false" />
   <!-- all: hides the status bar at the top of the screen -->
-  
-  
+
+  <preference name="SplashScreen" value="splash" />
   <preference name="webviewbounce"              value="true" />
   <!-- ios: control whether the screen 'bounces' when scrolled beyond the top -->
   <preference name="prerendered-icon"           value="true" />
