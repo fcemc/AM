@@ -38,12 +38,13 @@ h3{
     color: black;
 }
 
-/*li{
-    background-color:gainsboro;
-}*/
-
-/*.notes{
-    background-color:gainsboro !important;
-    color:black !important;
-}*/
-
+th {
+    text-align: center;    
+}
+td {
+    text-align: center;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
