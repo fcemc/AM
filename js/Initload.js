@@ -279,10 +279,10 @@ function networkIssue(button) {
 
 function quitRegistration(button) {
     if (button == 2) {
-        
+        resetForm();
     }
     else if (button == 1) {
-        resetForm();
+        
     }
 }
 
@@ -743,7 +743,7 @@ function getProxyInfo() {
         $("#personContent :input").prop("disabled", false);
         $("#nonpersonContent :input").prop("disabled", false);
 
-        var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").html();
+        var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
         $.ajax({
             type: "GET",
             url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + paramItems,
