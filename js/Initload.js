@@ -331,7 +331,7 @@ function getMemberScanInfo(paramItems) {
             if (results.length == 1) {
                 if (results[0].VOTE.toString() == null) {
                     var memData = [];
-                    memData.push("VOTE|'0'",
+                    memData.push("VOTE|'0'");
                     memData.push("NAME|" + results[0].NAME.toString());
                     memData.push("MEMBERNO|" + results[0].MEMBERNO.toString());
                     memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
