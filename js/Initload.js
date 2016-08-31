@@ -113,7 +113,7 @@ $(document).ready(function () {
     $("#radio-proxy").on("click", getProxyInfo);
     $("#cancelCheckin").on("click", function () {
         if ($("#logmem_VOTE").text() == "No") {
-            navigator.notification.confirm("Member is not registered do you want to continue!", quitRegistration, "Please Confirm:", "Cancel, Ok");
+            navigator.notification.confirm("Member is not registered do you want to continue!", quitRegistration, "Please Confirm:", "No, Yes");
         }
         else {
             resetForm();
