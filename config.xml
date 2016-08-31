@@ -76,10 +76,10 @@
   <plugin name="org.apache.cordova.device-motion" />
   <plugin name="org.apache.cordova.device-orientation" />
   <plugin name="org.apache.cordova.dialogs" />
-  <plugin name="org.apache.cordova.file" />
-  <plugin name="org.apache.cordova.file-transfer" />
+  <!--<plugin name="org.apache.cordova.file" />
+  <plugin name="org.apache.cordova.file-transfer" />-->
   <plugin name="org.apache.cordova.geolocation" />  
-  <plugin name="org.apache.cordova.globalization" spec="0.3.4" source="pgb" />
+  <!--<plugin name="org.apache.cordova.globalization" spec="0.3.4" source="pgb" />-->
   <plugin name="org.apache.cordova.inappbrowser" />
   <plugin name="org.apache.cordova.media" />
   <plugin name="org.apache.cordova.network-information" />
