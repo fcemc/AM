@@ -101,33 +101,45 @@
 
   <!-- Define app icon for each platform. -->
   <icon src="img/EMCLogoGreen.png" />
-  <icon src="res/icon/android/icon-36-ldpi.png"   gap:platform="android"    gap:qualifier="ldpi" />
-  <icon src="res/icon/android/icon-48-mdpi.png"   gap:platform="android"    gap:qualifier="mdpi" />
-  <icon src="res/icon/android/icon-72-hdpi.png"   gap:platform="android"    gap:qualifier="hdpi" />
-  <icon src="res/icon/android/icon-96-xhdpi.png"  gap:platform="android"    gap:qualifier="xhdpi" />
-  <icon src="res/icon/blackberry/icon-80.png"     gap:platform="blackberry" />
-  <icon src="res/icon/blackberry/icon-80.png"     gap:platform="blackberry" gap:state="hover"/>
-  <icon src="res/icon/ios/icon-57.png"            gap:platform="ios"        width="57" height="57" />
-  <icon src="res/icon/ios/icon-72.png"            gap:platform="ios"        width="72" height="72" />
-  <icon src="res/icon/ios/icon-57-2x.png"         gap:platform="ios"        width="114" height="114" />
-  <icon src="res/icon/ios/icon-72-2x.png"         gap:platform="ios"        width="144" height="144" />
-  <icon src="res/icon/webos/icon-64.png"          gap:platform="webos" />
-  <icon src="res/icon/windows-phone/icon-48.png"  gap:platform="winphone" />
-  <icon src="res/icon/windows-phone/icon-173.png" gap:platform="winphone"   gap:role="background" />
+  <icon src="res/icon/android/icon-36-ldpi.png"   platform="android"    gap:qualifier="ldpi" />
+  <icon src="res/icon/android/icon-48-mdpi.png"   platform="android"    gap:qualifier="mdpi" />
+  <icon src="res/icon/android/icon-72-hdpi.png"   platform="android"    gap:qualifier="hdpi" />
+  <icon src="res/icon/android/icon-96-xhdpi.png"  platform="android"    gap:qualifier="xhdpi" />
+  <icon src="res/icon/ios/icon-57.png"            platform="ios"        width="57" height="57" />
+  <icon src="res/icon/ios/icon-72.png"            platform="ios"        width="72" height="72" />
+  <icon src="res/icon/ios/icon-57-2x.png"         platform="ios"        width="114" height="114" />
+  <icon src="res/icon/ios/icon-72-2x.png"         platform="ios"        width="144" height="144" />
+  <icon src="res/icon/webos/icon-64.png"          platform="webos" />
 
   <!-- Define app splash screen for each platform. -->
   <splash src="splash.png" />
   <splash src="res/screen/android/screen-ldpi-portrait.png"       platform="android" qualifier="port-ldpi" />
   <splash src="res/screen/android/screen-mdpi-portrait.png"       platform="android" qualifier="port-mdpi" />
   <splash src="res/screen/android/screen-hdpi-portrait.png"       platform="android" qualifier="port-hdpi" />
-  <splash src="res/screen/android/screen-xhdpi-portrait.png"      platform="android" qualifier="port-xhdpi" />
-  <splash src="res/screen/blackberry/screen-225.png"              platform="blackberry" />
-  <splash src="res/screen/ios/screen-iphone-portrait.png"         platform="ios"     width="320" height="480" />
+  <splash src="res/screen/android/screen-xhdpi-portrait.png"      platform="android" qualifier="port-xhdpi" />  
+  <!--<splash src="res/screen/ios/screen-iphone-portrait.png"         platform="ios"     width="320" height="480" />
   <splash src="res/screen/ios/screen-iphone-portrait-2x.png"      platform="ios"     width="640" height="960" />
   <splash src="res/screen/ios/screen-iphone-portrait-568h-2x.png" platform="ios"     width="640" height="1136" />
   <splash src="res/screen/ios/screen-ipad-portrait.png"           platform="ios"     width="768" height="1024" />
-  <splash src="res/screen/ios/screen-ipad-landscape.png"          platform="ios"     width="1024" height="768" />
-  <splash src="res/screen/windows-phone/screen-portrait.jpg"      platform="winphone" />
+  <splash src="res/screen/ios/screen-ipad-landscape.png"          platform="ios"     width="1024" height="768" />-->
+
+  <!-- iPhone and iPod touch -->
+  <splash src="Default.png" platform="ios" width="320" height="480" />
+  <splash src="Default@2x.png" platform="ios" width="640" height="960" />
+  <!-- iPhone 5 / iPod Touch (5th Generation) -->
+  <splash src="Default-568h@2x.png" platform="ios" width="640" height="1136" />
+  <!-- iPhone 6 -->
+  <splash src="Default-667h@2x.png" platform="ios" width="750" height="1334" />
+  <splash src="Default-Portrait-736h@3x.png" platform="ios" width="1242" height="2208" />
+  <splash src="Default-Landscape-736h@3x.png" platform="ios" width="2208" height="1242" />
+  <!-- iPad -->
+  <splash src="Default-Portrait.png" platform="ios" width="768" height="1024" />
+  <splash src="Default-Landscape.png" platform="ios" width="1024" height="768" />
+  <!-- Retina iPad -->
+  <splash src="Default-Portrait@2x.png" platform="ios" width="1536" height="2048" />
+  <splash src="Default-Landscape@2x.png" platform="ios" width="2048" height="1536" />
+  
+
 
   <gap:config-file platform="ios" parent="CFBundleShortVersionString">
     <string>0.0.1</string>
