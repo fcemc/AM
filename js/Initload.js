@@ -219,7 +219,7 @@ function scan() {
         cordova.plugins.barcodeScanner.scan(
           function (result) {
               if (result.cancelled != 1) {
-                  getMemberScanInfo(result.text);
+                  getMemberScanInfo(result.text.trim(result.text));
               }
               localStorage.setItem("fcemcInventory_scanning", false);
           },
@@ -843,8 +843,8 @@ function scanPerson() {
         localStorage.setItem("fcemcInventory_scanning", true);
         cordova.plugins.barcodeScanner.scan(
           function (result) {
-              if (result.cancelled != 1) {
-                  $("#person").val(result.text);
+              if (result.cancelled != 1) {                  
+                  $("#person").val(result.text.trim(result.text));
                   searchPerson();
               }
               localStorage.setItem("fcemcInventory_scanning", false);
@@ -921,7 +921,7 @@ function scanNonPerson() {
         cordova.plugins.barcodeScanner.scan(
           function (result) {
               if (result.cancelled != 1) {
-                  $("#nonperson").val(result.text);
+                  $("#nonperson").val(result.text.trim(result.text));
                   searchNonPerson();
               }
               localStorage.setItem("fcemcInventory_scanning", false);
