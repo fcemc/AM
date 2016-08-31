@@ -49,7 +49,7 @@ $(document).ready(function () {
             //{ visible: false },
             {
                 cellFormatter: function (args) {
-                    if (args.formattedValue == 1) {  
+                    if (args.formattedValue > 0) {
                         if (args.row.type & $.wijmo.wijgrid.rowType.data) { // data row (not group header) 
                             var img = $("<img/>")
                                 .attr("src", "img/check24x24.png") // flag url 
@@ -79,22 +79,16 @@ $(document).ready(function () {
         cellClicked: function (e, args) {
             if (args.cell._wijgrid != null) {
                 args.cell._ci = 0;
-                if (args.cell.value() == "0") {
-                    $("#memberData").empty();
-                    var memData = [];
-                    for (var m = 1; m < $("#memgrid").wijgrid("columns").length; m++) {
-                        args.cell._ci = m;
-                        var title = args.cell.column().headerText;
-                        var value = args.cell.value();
-                        memData.push(title + "|" + value);
-                    }
-                    changePage('checkInPage');
-                    beginCheckIn(memData);
+                $("#memberData").empty();
+                var memData = [];
+                for (var m = 0; m < $("#memgrid").wijgrid("columns").length; m++) {
+                    args.cell._ci = m;
+                    var title = args.cell.column().headerText;
+                    var value = args.cell.value();
+                    memData.push(title + "|" + value);
                 }
-                else {
-                    //alert("Member already registered");
-                    navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
-                }
+                changePage('checkInPage');
+                beginCheckIn(memData);
             }
         }
     });
@@ -114,9 +108,22 @@ $(document).ready(function () {
         }
         $("#member-autocomplete-input").focus();
     });
-
+    $("#radio-single").on("click", clearProxyInfo);
+    $("#radio-nonmemproxy").on("click", clearProxyInfo);
+    $("#radio-proxy").on("click", getProxyInfo);
     $("#cancelCheckin").on("click", function () {
-        resetForm();
+        if ($("#logmem_VOTE").text() == "No") {
+            if (navigator.notification.confirm("Member is not registered do you want to continue!", quitRegistration, "Please Confirm:", "Cancel, Ok")) {
+                //window.location.reload();
+            }
+            else {
+                resetForm();
+            }
+        }
+        else {
+            resetForm();
+        }
+        
     });
 
     $("#popuppopupCheckinError").popup({ history: false });
@@ -132,7 +139,7 @@ $(document).ready(function () {
     });
 
     $("#saveCheckin").on("click", function () {
-        logMemberIn();
+        preLogMemberIn();
     });
 });
 
@@ -276,6 +283,15 @@ function networkIssue(button) {
     }
 }
 
+function quitRegistration(button) {
+    if (button == 2) {
+        
+    }
+    else if (button == 1) {
+        resetForm();
+    }
+}
+
 function fakeCallback() { }
 //endregion
 
@@ -327,6 +343,7 @@ function getMemberScanInfo(paramItems) {
                     memData.push("BILLADDR|" + results[0].BILLADDR.toString());
                     memData.push("SERVADDR|" + results[0].SERVADDR.toString());
                     memData.push("PHONE|" + results[0].PHONE.toString());
+                    //memData.push("PROXY|" + results[0].PROXY.toString());
                     //memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
                     //memData.push("METER|" + results[0].METER.toString());
                     beginCheckIn(memData);
@@ -342,7 +359,7 @@ function getMemberScanInfo(paramItems) {
                 //just in case there are duplicate MBRSEP numbers        
                 var memData = [];
                 for (var i = 0; i < results.length; i++) {
-                    memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE })
+                    memData.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE, PROXY: results[i].PROXY })
                 }
                 $("#memgridContainer").show();
                 $("#memgrid").wijgrid("option", "data", memData);
@@ -400,8 +417,12 @@ function getMemberInfo(paramItems) {
             var results = result.MEMBERLISTResult;
             var data = [];
             for (var i = 0; i < results.length; i++) {
-                //data.push({ MAPNUMBER: results[i].MAPNUMBER, METER: results[i].METER, VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
-                data.push({ VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE });
+                if (results[i].VOTE != null) {
+                    data.push({ VOTE: results[i].VOTE, NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE, PROXY: results[i].PROXY });
+                }
+                else if (results[i].VOTE == null) {
+                    data.push({ VOTE: "0", NAME: results[i].NAME, MEMBERNO: results[i].MEMBERNO, MEMBERSEP: results[i].MEMBERSEP, BILLADDR: results[i].BILLADDR, SERVADDR: results[i].SERVADDR, PHONE: results[i].PHONE, PROXY: results[i].PROXY });
+                }
             }
             $("#memgridContainer").show();
             $("#memgrid").wijgrid("option", "data", data);
@@ -419,7 +440,17 @@ function getMemberInfo(paramItems) {
 
 function beginCheckIn(memData) {
     for (var i = 0; i < memData.length; i++) {
-        $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>");
+        if (memData[i].toString().split("|")[0] == "VOTE") {
+            if (memData[i].toString().split("|")[1] == "0") {
+                $("#memberData").append("<div><b>REGISTERED</b>: <label  style='display:inline-block' id='logmem_VOTE'>No</label></div>");
+            }
+            else if (memData[i].toString().split("|")[1] != "0") {
+                $("#memberData").append("<div><b>REGISTERED</b>: <label  style='display:inline-block' id='logmem_VOTE'>Yes</label></div>");
+            }
+        }
+        else {
+            $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>");
+        }
     }
 }
 
@@ -427,56 +458,155 @@ function resetForm() {
     $("input.memberCheckIn[type=radio]").prop('checked', false).checkboxradio("refresh");
     $("#member-autocomplete-input").val("");
     $("#memgridContainer").hide();
-    $("body").pagecontainer("change", "#page1");
+    //$("body").pagecontainer("change", "page1");
+    changePage('page1');
+    clearProxyInfo();
 }
 
-function logMemberIn() {
-    var _vote = "";
-    $("input.memberCheckIn[type=radio]").each(function () {
-        if (this.checked === true)
-            _vote = this.value;
-    });
-
-    var _data = {
-        "MEMBERSEP": $("#logmem_MEMBERSEP").text(),
-        "MAPNUMBER": $("#logmem_MAPNUMBER").text(),
-        "NAME": $("#logmem_NAME").text(),
-        "BILLADDR": $("#logmem_BILLADDR").text(),
-        "MBRNO": $("#logmem_MEMBERNO").text(),
-        "SERVADDR": $("#logmem_SERVADDR").text(),
-        "TELEPHONE": $("#logmem_PHONE").text(),
-        "METER": $("#logmem_METER").text(),
-        "VOTE": _vote
-    };
-
-    if (_vote != "") {
-        $.ajax({
-            type: "POST",
-            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify(_data),
-            cache: false,
-            success: function (result) {
-                if (result === "True") {
-                    $("#popupCheckinSuccess").popup("open");
-                }
-                else {
-                    var issue = result;
-                    $("#popuppopupCheckinError p").text(result);
-                    $("#popuppopupCheckinError").popup("open");
-                }
-            },
-            error: function (textStatus, errorThrown) {
-                var txt = textStatus;
-                var et = errorThrown;
+function preLogMemberIn() {
+    if ($("#logmem_VOTE").text() == "No") {
+        var _vote = "", _p = "", _pt = "0";
+        $("input.memberCheckIn[type=radio]").each(function () {
+            if (this.checked === true && $(this).val() == 1) {
+                _vote = this.value;
+            }
+            else if (this.checked === true && $(this).val() == 2) {
+                _vote = this.value;
+            }
+            else if (this.checked === true && $(this).val() == 3) {
+                _vote = this.value;
+                _p = "-1";  //NON MEMBER VOTIING 
+                _pt = "2";  //FOR NON-PERSON PROXY
             }
         });
+
+        if (_vote != "") {
+            var _data = {
+                "MEMBERSEP": $("#logmem_MEMBERSEP").text(),
+                "MAPNUMBER": $("#logmem_MAPNUMBER").text(),
+                "NAME": $("#logmem_NAME").text(),
+                "BILLADDR": $("#logmem_BILLADDR").text(),
+                "MBRNO": $("#logmem_MEMBERNO").text(),
+                "SERVADDR": $("#logmem_SERVADDR").text(),
+                "TELEPHONE": $("#logmem_PHONE").text(),
+                "METER": $("#logmem_METER").text(),
+                "VOTE": _vote,
+                "PROXY": _p,
+                "PTYPE": _pt
+            };
+            logMemberIn(_data);
+        }
+        else {
+            $("#popuppopupCheckinError p").text("You need to make a selection!");
+            $("#popuppopupCheckinError").popup("open");
+        }
     }
-    else if (_vote === "") {
-        $("#popuppopupCheckinError p").text("You need to make a selection!");
-        $("#popuppopupCheckinError").popup("open");
+    else if ($("#logmem_VOTE").text() == "Yes") {
+        
+
+        if (navigator.notification != undefined) {
+            navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
+        }
+        else {
+            alert("Member already registered!");
+        }
     }
+
+}
+
+function logMemberIn(_data) {
+    $.ajax({
+        type: "POST",
+        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(_data),
+        cache: false,
+        success: function (result) {
+            if (result === "True") {
+                $("#popupCheckinSuccess").popup("open");
+            }
+            else {
+                var issue = result;
+                $("#popuppopupCheckinError p").text(result);
+                $("#popuppopupCheckinError").popup("open");
+            }
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
+}
+
+function logProxyMemberIn(_data) {
+    $.ajax({
+        type: "POST",
+        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(_data),
+        cache: false,
+        success: function (result) {
+            if (result === "True") {
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("Member proxy registered!", fakeCallback, "Member Registration", "Ok");
+                    $("#personContent :input[type='button']").prop("disabled", true);
+                }
+                else {
+                    alert("Member proxy registered!");
+                    $("#personContent :input[type='button']").prop("disabled", true);
+                }
+            }
+            else {
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("Member proxy was not registered! " + result, fakeCallback, "Member Registration", "Ok");
+                }
+                else {
+                    alert("Member proxy was not registered! " + result);
+                }
+            }
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
+}
+
+function logNonProxyMemberIn(_data) {
+    $.ajax({
+        type: "POST",
+        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(_data),
+        cache: false,
+        success: function (result) {
+            if (result === "True") {
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("Non-Person proxy registered!", fakeCallback, "Member Registration", "Ok");
+                    $("#nonpersonContent :input[type='button']").prop("disabled", true);
+                }
+                else {
+                    alert("Non-Person proxy registered!");
+                    $("#nonpersonContent :input[type='button']").prop("disabled", true);
+                }
+            }
+            else {
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("Non-Person proxy was not registered! " + result, fakeCallback, "Member Registration", "Ok");
+                }
+                else {
+                    alert("Non-Person proxy was not registered! " + result);
+                }
+            }
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
 }
 
 function getStats() {
@@ -490,11 +620,88 @@ function getStats() {
         },
         success: function (result) {
             $("#statsData").empty();
-            var results = result.MEETINGSTATSResult;
-            var strg = "<div><b>SINGLE</b>: " + results[0].SINGLE + "</div>";
-            strg += "<div><b>DUAL</b>: " + results[0].DUAL + "</div>";
-            strg += "<div><b>PROXY</b>: " + results[0].PROXY + "</div>";
-            $("#statsData").append(strg);
+            var _c = result.MEETINGSTATSResult.COUNTY;
+            var _d = result.MEETINGSTATSResult.DIST;
+
+            //DISTRICTS
+            if (_d[0] != undefined) {
+                $("#b1").text(checkNull(_d[0].MIN));
+                $("#b2").text(checkNull(_d[0].NONMIN));
+                $("#b3").text(checkNull(_d[0].ATTEND));
+                $("#b4").text(checkNull(_d[0].NONATTEND));
+                $("#b5").text(checkNull(_d[0].TOTAL));
+            }
+            
+            if (_d[1] != undefined) {
+                $("#e1").text(checkNull(_d[1].MIN));
+                $("#e2").text(checkNull(_d[1].NONMIN));
+                $("#e3").text(checkNull(_d[1].ATTEND));
+                $("#e4").text(checkNull(_d[1].NONATTEND));
+                $("#e5").text(checkNull(_d[1].TOTAL));
+            }
+
+            if (_d[2] != undefined) {
+                $("#r1").text(checkNull(_d[2].MIN));
+                $("#r2").text(checkNull(_d[2].NONMIN));
+                $("#r3").text(checkNull(_d[2].ATTEND));
+                $("#r4").text(checkNull(_d[2].NONATTEND));
+                $("#r5").text(checkNull(_d[2].TOTAL));
+            }
+
+
+            //Countys
+            if (_c[0] != undefined) {
+                $("#bl1").text(checkNull(_c[0].MIN));
+                $("#bl2").text(checkNull(_c[0].NONMIN));
+                $("#bl3").text(checkNull(_c[0].ATTEND));
+                $("#bl4").text(checkNull(_c[0].NONATTEND));
+                $("#bl5").text(checkNull(_c[0].TOTAL));
+            }
+
+            if (_c[1] != undefined) {
+                $("#c1").text(checkNull(_c[1].MIN));
+                $("#c2").text(checkNull(_c[1].NONMIN));
+                $("#c3").text(checkNull(_c[1].ATTEND));
+                $("#c4").text(checkNull(_c[1].NONATTEND));
+                $("#c5").text(checkNull(_c[1].TOTAL));
+            }
+
+            if (_c[2] != undefined) {
+                $("#d1").text(checkNull(_c[2].MIN));
+                $("#d2").text(checkNull(_c[2].NONMIN));
+                $("#d3").text(checkNull(_c[2].ATTEND));
+                $("#d4").text(checkNull(_c[2].NONATTEND));
+                $("#d5").text(checkNull(_c[2].TOTAL));
+            }
+
+            if (_c[3] != undefined) {
+                $("#o1").text(checkNull(_c[3].MIN));
+                $("#o2").text(checkNull(_c[3].NONMIN));
+                $("#o3").text(checkNull(_c[3].ATTEND));
+                $("#o4").text(checkNull(_c[3].NONATTEND));
+                $("#o5").text(checkNull(_c[3].TOTAL));
+            }
+
+            if (_c[4] != undefined) {
+                $("#p1").text(checkNull(_c[4].MIN));
+                $("#p2").text(checkNull(_c[4].NONMIN));
+                $("#p3").text(checkNull(_c[4].ATTEND));
+                $("#p4").text(checkNull(_c[4].NONATTEND));
+                $("#p5").text(checkNull(_c[4].TOTAL));
+            }
+
+            if (_c[5] != undefined) {
+                $("#s1").text(checkNull(_c[5].MIN));
+                $("#s2").text(checkNull(_c[5].NONMIN));
+                $("#s3").text(checkNull(_c[5].ATTEND));
+                $("#s4").text(checkNull(_c[5].NONATTEND));
+                $("#s5").text(checkNull(_c[5].TOTAL));
+            }
+
+            $("#district  table tr td").eq(0).css('width','200px');
+            $("#county  table tr td").eq(0).css('width','200px');
+
+
         },
         complete: function () {
             $("#spinCont").hide();
@@ -506,4 +713,223 @@ function getStats() {
     });
 }
 
+function checkNull(val) {
+    var a = 0;
+    if (val != null) {
+        a = val;
+    }
+    return a;
+}
+
+function clearProxyInfo() {
+    $("#proxyFields").css("visibility", "hidden").css("height", "0");
+    $("#person").val("");
+    $("#nonperson").val("");
+}
+
+function getProxyInfo() {
+    if ($("#logmem_PROXY").text().length == 0) {
+        $("#proxyFields").css("visibility", "visible").css("height", "187px");
+        $("#person").val("");
+        $("#nonperson").val("");
+
+        $("#personContent :input").prop("disabled", false);
+        $("#nonpersonContent :input").prop("disabled", false);
+
+        var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").html();
+        $.ajax({
+            type: "GET",
+            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + paramItems,
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            beforeSend: function () {
+                $("#spinCont").show();
+            },
+            success: function (result) {
+                var results = result.MEMBERLISTResult;
+                if (results.length > 0) {
+                    for (var i = 0; i < results.length; i++) {
+                        if (results[i].PTYPE == "1") {
+                            $("#person").val(results[i].MEMBERSEP);
+                            $("#personContent :input[type='button']").prop("disabled", true);
+                        }
+                        else if (results[i].PTYPE == "2") {
+                            $("#nonperson").val(results[i].MEMBERSEP);
+                            $("#nonpersonContent :input[type='button']").prop("disabled", true);
+                        }
+                    }
+                }
+            },
+            complete: function () {
+                $("#spinCont").hide();
+            },
+            error: function (textStatus, errorThrown) {
+                var txt = textStatus;
+                var et = errorThrown;
+            }
+        });
+    }
+    else {
+        if (navigator.notification != undefined) {
+            navigator.notification.alert("Member already registered as proxy!", fakeCallback, "Member Registration", "Ok");
+        }
+        else {
+            alert("Member already registered as proxy!");
+        }
+    }
+
+}
+
+function scanPerson() {
+    try {
+        localStorage.setItem("fcemcInventory_scanning", true);
+        cordova.plugins.barcodeScanner.scan(
+          function (result) {
+              if (result.cancelled != 1) {
+                  $("#person").val(result.text);
+                  searchPerson();
+              }
+              localStorage.setItem("fcemcInventory_scanning", false);
+          },
+          function (error) {
+              $("#scanText").text("Scanning failed: " + error);
+              localStorage.setItem("fcemcInventory_scanning", false);
+          },
+          {
+              "preferFrontCamera": false, // iOS and Android
+              "showFlipCameraButton": true, // iOS and Android
+              "prompt": "Place a barcode inside the scan area", // supported on Android only
+              //"formats": "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+              "orientation": "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
+          }
+       );
+    }
+    catch (err) {
+        alert(err.message.toString());
+    }
+}
+
+function searchPerson() {
+    var paramItems = $("#person").val();
+
+    $.ajax({
+        type: "GET",
+        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLISTSCAN/" + paramItems,
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
+        success: function (result) {
+            var results = result.MEMBERLISTSCANResult;
+            if (results.length > 0) {
+                var _data = {
+                    "MEMBERSEP": results[0].MEMBERSEP,
+                    "MAPNUMBER": results[0].MAPNUMBER,
+                    "NAME": results[0].NAME,
+                    "BILLADDR": results[0].BILLADDR,
+                    "MBRNO": results[0].MEMBERNO,
+                    "SERVADDR": results[0].SERVADDR,
+                    "TELEPHONE": results[0].PHONE,
+                    "METER": results[0].METER,
+                    "VOTE": "3",
+                    "PROXY": $("#logmem_MEMBERSEP").text(),
+                    "PTYPE": "1"
+                };
+                logProxyMemberIn(_data);
+            }
+            else if (results.length === 0) {
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("No member found!", fakeCallback, "Member Registration", "Ok");
+                }
+                else {
+                    alert("No member found!");
+                }
+            }
+        },
+        complete: function () {
+            $("#spinCont").hide();
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
+}
+
+function scanNonPerson() {
+    try {
+        localStorage.setItem("fcemcInventory_scanning", true);
+        cordova.plugins.barcodeScanner.scan(
+          function (result) {
+              if (result.cancelled != 1) {
+                  $("#nonperson").val(result.text);
+                  searchNonPerson();
+              }
+              localStorage.setItem("fcemcInventory_scanning", false);
+          },
+          function (error) {
+              $("#scanText").text("Scanning failed: " + error);
+              localStorage.setItem("fcemcInventory_scanning", false);
+          },
+          {
+              "preferFrontCamera": false, // iOS and Android
+              "showFlipCameraButton": true, // iOS and Android
+              "prompt": "Place a barcode inside the scan area", // supported on Android only
+              //"formats": "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+              "orientation": "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
+          }
+       );
+    }
+    catch (err) {
+        alert(err.message.toString());
+    }
+}
+
+function searchNonPerson() {
+    var paramItems = $("#nonperson").val();
+    $.ajax({
+        type: "GET",
+        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLISTSCAN/" + paramItems,
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
+        success: function (result) {
+            var results = result.MEMBERLISTSCANResult;
+            if (results.length > 0) {
+                var _data = {
+                    "MEMBERSEP": results[0].MEMBERSEP,
+                    "MAPNUMBER": results[0].MAPNUMBER,
+                    "NAME": results[0].NAME,
+                    "BILLADDR": results[0].BILLADDR,
+                    "MBRNO": results[0].MEMBERNO,
+                    "SERVADDR": results[0].SERVADDR,
+                    "TELEPHONE": results[0].PHONE,
+                    "METER": results[0].METER,
+                    "VOTE": "3",
+                    "PROXY": $("#logmem_MEMBERSEP").text(),
+                    "PTYPE": "2"
+                };
+                logNonProxyMemberIn(_data);
+            }
+            else if (results.length === 0) {
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("No member found!", fakeCallback, "Member Registration", "Ok");
+                }
+                else {
+                    alert("No member found!");
+                }
+            }
+        },
+        complete: function () {
+            $("#spinCont").hide();
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
+}
 //endregion
