@@ -329,24 +329,37 @@ function getMemberScanInfo(paramItems) {
             var results = result.MEMBERLISTSCANResult;
             $("#memberData").empty();
             if (results.length == 1) {
-                if (results[0].VOTE.toString() == null) {
+                if (results[0].VOTE == null) {
                     var memData = [];
-                    memData.push("VOTE|'0'");
+                    memData.push("VOTE|0");
+                    memData.push("NAME|" + results[0].NAME.toString());
+                    memData.push("MEMBERNO|" + results[0].MEMBERNO.toString());
+                    memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
+                    memData.push("BILLADDR|" + results[0].BILLADDR.toString());
+                    memData.push("SERVADDR|" + results[0].SERVADDR.toString());
+                    memData.push("PHONE|" + results[0].PHONE.toString());                    
+                    memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
+                    memData.push("METER|" + results[0].METER.toString());
+                    memData.push("PROXY|");
+                    //memData.push("PTYPE|''");
+                    beginCheckIn(memData);
+                    changePage('checkInPage');
+                }
+                else if (results[0].VOTE.toString() != "0") {
+                    var memData = [];
+                    memData.push("VOTE|" + results[0].VOTE.toString());
                     memData.push("NAME|" + results[0].NAME.toString());
                     memData.push("MEMBERNO|" + results[0].MEMBERNO.toString());
                     memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
                     memData.push("BILLADDR|" + results[0].BILLADDR.toString());
                     memData.push("SERVADDR|" + results[0].SERVADDR.toString());
                     memData.push("PHONE|" + results[0].PHONE.toString());
-                    memData.push("PROXY|" + results[0].PROXY.toString());
                     memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
                     memData.push("METER|" + results[0].METER.toString());
+                    memData.push("PROXY|" + results[0].PROXY.toString());
+                    //memData.push("PTYPE|''");
                     beginCheckIn(memData);
                     changePage('checkInPage');
-                }
-                else if (results[0].VOTE.toString() != "0") {
-                    //alert("Member already registered");
-                    navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
                 }
             }
             else if (results.length > 1) {
