@@ -617,6 +617,8 @@ function logNonProxyMemberIn(_data) {
 }
 
 function getStats() {
+    clearTableValues();
+
     $.ajax({
         type: "GET",
         url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEETINGSTATS",
@@ -718,6 +720,55 @@ function getStats() {
             var et = errorThrown;
         }
     });
+}
+
+function clearTableValues() {
+    $('#b1').text('0');
+    $('#b2').text('0');
+    $('#b3').text('0');
+    $('#b4').text('0');
+    $('#b5').text('0');
+    $('#e1').text('0');
+    $('#e2').text('0');
+    $('#e3').text('0');
+    $('#e4').text('0');
+    $('#e5').text('0');
+    $('#r1').text('0');
+    $('#r2').text('0');
+    $('#r3').text('0');
+    $('#r4').text('0');
+    $('#r5').text('0');
+    $('#bl1').text('0');
+    $('#bl2').text('0');
+    $('#bl3').text('0');
+    $('#bl4').text('0');
+    $('#bl5').text('0');
+    $('#c1').text('0');
+    $('#c2').text('0');
+    $('#c3').text('0');
+    $('#c4').text('0');
+    $('#c5').text('0');
+    $('#d1').text('0');
+    $('#d2').text('0');
+    $('#d3').text('0');
+    $('#d4').text('0');
+    $('#d5').text('0');
+    $('#o1').text('0');
+    $('#o2').text('0');
+    $('#o3').text('0');
+    $('#o4').text('0');
+    $('#o5').text('0');
+    $('#p1').text('0');
+    $('#p2').text('0');
+    $('#p3').text('0');
+    $('#p4').text('0');
+    $('#p5').text('0');
+    $('#s1').text('0');
+    $('#s2').text('0');
+    $('#s3').text('0');
+    $('#s4').text('0');
+    $('#s5').text('0');
+
 }
 
 function checkNull(val) {
