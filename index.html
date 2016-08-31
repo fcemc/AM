@@ -5,19 +5,19 @@
     <link href="js/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
     <link href="css/MiniDashbaord.css" rel="stylesheet" />
     <link href="css/StyleSheet.css" rel="stylesheet" />
-    
+
     <script src="js/jquery-1.12.2.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>
-    
+
     <!--Wijmo Widgets CSS-->
     <link href="wijmo/jquery.wijmo-pro.all.css" rel="stylesheet" />
     <!--Wijmo Widgets JavaScript-->
     <script src="wijmo/jquery.wijmo-open.all.min.js"></script>
     <script src="wijmo/jquery.wijmo-pro.all.min.js"></script>
-        
+
     <script src="js/toastr.min.js"></script>
     <link href="content/toastr.min.css" rel="stylesheet" />
-    
+
     <script src="js/Initload.js"></script>
     <script src="js/barcodescanner.js"></script>
     <script src="js/jquery.spin.js"></script>
@@ -81,7 +81,7 @@
                         <label for="radio-choice-h-2g">ServiceAddress</label>
                     </fieldset>
                 </div>
-                <input type="number" autocomplete="off" id="member-autocomplete-input" data-type="search" placeholder="Member Search...">                
+                <input type="number" autocomplete="off" id="member-autocomplete-input" data-type="search" placeholder="Member Search...">
             </form>
             <div style="font-size:12px;" id="memgridContainer">
                 <table id="memgrid"></table>
@@ -100,11 +100,37 @@
                 <fieldset data-role="controlgroup" data-type="horizontal">
                     <input class="memberCheckIn" type="radio" name="radio-choice-h-2" id="radio-single" value="1"> <!--SINGLE-->
                     <label for="radio-single">Single</label>
-                    <input class="memberCheckIn" type="radio" name="radio-choice-h-2" id="radio-dual" value="2"> <!--DUAL-->
-                    <label for="radio-dual">Dual</label>
-                    <input class="memberCheckIn" type="radio" name="radio-choice-h-2" id="radio-proxy" value="3"> <!--PROXY-->
-                    <label for="radio-proxy">Proxy</label>
+                    <input class="memberCheckIn" type="radio" name="radio-choice-h-2" id="radio-proxy" value="2"> <!--PROXY-->
+                    <label for="radio-proxy">MemberProxy</label>
+                    <input class="memberCheckIn" type="radio" name="radio-choice-h-2" id="radio-nonmemproxy" value="3"> <!--NON Memeber PROXY-->
+                    <label for="radio-nonmemproxy">NonMemberProxy</label>
                 </fieldset>
+            </div>
+            <div id="proxyFields" style="color: black; text-align: center; padding-bottom:10px; visibility:hidden; height:0;">
+                <label>Person:</label>
+                <div id="personContent">
+                    <div style='display:inline-block;'>
+                        <input id="pbtn1" type='button' onclick='scanPerson();' value='Scan' />
+                    </div>
+                    <div style='display:inline-block; vertical-align:top; padding-top:2px;'>
+                        <input id='person' type='number' />
+                    </div>
+                    <div style='display:inline-block;'>
+                        <input id="pbtn2" type='button' onclick='searchPerson();' value='Register' />
+                    </div>
+                </div>
+                <label>Non-Person:</label>
+                <div id="nonpersonContent">
+                    <div style='display:inline-block;'>
+                        <input id="npbtn1" type='button' onclick='scanNonPerson();' value='Scan' />
+                    </div>
+                    <div style='display:inline-block; vertical-align:top; padding-top:2px;'>
+                        <input id='nonperson' type='number' />
+                    </div>
+                    <div style='display:inline-block;'>
+                        <input id="npbtn1" type='button' onclick='searchNonPerson();' value='Register' />
+                    </div>
+                </div>
             </div>
         </form>
         <div data-role="popup" id="popupCheckinSuccess">
@@ -118,25 +144,123 @@
                 <p></p>
                 <img style="height:35px;" src="img/RedExlamantion.png" />
             </div>
-        </div>      
+        </div>
         <div data-role="header">
             <button id="cancelCheckin" style="background-color: red;" class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cancel</button>
             <h1></h1>
-            <button id="saveCheckin" style="background-color: lawngreen; text-shadow:1px 1px 4px black" class="ui-btn-right ui-btn ui-btn-c ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>
+            <button id="saveCheckin" style="background-color: lawngreen; text-shadow:1px 1px 4px black" class="ui-btn-right ui-btn ui-btn-c ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check ">Save</button>
         </div>
     </div>
 
     <div data-role="page" id="statsPage">
         <div data-role="header">
-            <h1>Meeting Stats</h1>            
+            <h1>Meeting Stats</h1>
         </div>
         <div role="main" class="ui-content">
-            <div id="statsData" style="color: black; text-align: center;"></div>
+            <div style="color: black; text-align: center;">
+                <table id="district">
+                    <tr>
+                        <th style="width:200px">Office</th>
+                        <th>Minority</th>
+                        <th>Non-Minority</th>
+                        <th>Attending Totals</th>
+                        <th>Non-Attending Totals</th>
+                        <th>Total Members</th>
+                    </tr>
+                    <tr>
+                        <td>Burgaw</td>
+                        <td><label id="b1">0</label></td>
+                        <td><label id="b2">0</label></td>
+                        <td><label id="b3">0</label></td>
+                        <td><label id="b4">0</label></td>
+                        <td><label id="b5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Elizabethtown</td>
+                        <td><label id="e1">0</label></td>
+                        <td><label id="e2">0</label></td>
+                        <td><label id="e3">0</label></td>
+                        <td><label id="e4">0</label></td>
+                        <td><label id="e5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Rose Hill</td>
+                        <td><label id="r1">0</label></td>
+                        <td><label id="r2">0</label></td>
+                        <td><label id="r3">0</label></td>
+                        <td><label id="r4">0</label></td>
+                        <td><label id="r5">0</label></td>
+                    </tr>
+                </table>
+
+
+                <table id="county">
+                    
+                    <tr>
+                        <th style="width:200px">County</th>
+                        <th>Minority</th>
+                        <th>Non-Minority</th>
+                        <th>Attending Totals</th>
+                        <th>Non-Attending Totals</th>
+                        <th>Total Members</th>
+                    </tr>
+                    <tr>
+                        <td>Bladen</td>
+                        <td><label id="bl1">0</label></td>
+                        <td><label id="bl2">0</label></td>
+                        <td><label id="bl3">0</label></td>
+                        <td><label id="bl4">0</label></td>
+                        <td><label id="bl5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Columbus</td>
+                        <td><label id="c1">0</label></td>
+                        <td><label id="c2">0</label></td>
+                        <td><label id="c3">0</label></td>
+                        <td><label id="c4">0</label></td>
+                        <td><label id="c5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Duplin</td>
+                        <td><label id="d1">0</label></td>
+                        <td><label id="d2">0</label></td>
+                        <td><label id="d3">0</label></td>
+                        <td><label id="d4">0</label></td>
+                        <td><label id="d5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Onslow</td>
+                        <td><label id="o1">0</label></td>
+                        <td><label id="o2">0</label></td>
+                        <td><label id="o3">0</label></td>
+                        <td><label id="o4">0</label></td>
+                        <td><label id="o5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Pender</td>
+                        <td><label id="p1">0</label></td>
+                        <td><label id="p2">0</label></td>
+                        <td><label id="p3">0</label></td>
+                        <td><label id="p4">0</label></td>
+                        <td><label id="p5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Sampson</td>
+                        <td><label id="s1">0</label></td>
+                        <td><label id="s2">0</label></td>
+                        <td><label id="s3">0</label></td>
+                        <td><label id="s4">0</label></td>
+                        <td><label id="s5">0</label></td>
+                    </tr>
+                </table>
+            </div>
             <a style="background-color: #0D914F;" href="#page1" class="ui-btn ui-corner-all">Back to Main Page</a>
         </div>
     </div>
 
-    
+
+
+
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
