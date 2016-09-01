@@ -135,6 +135,9 @@ $(document).ready(function () {
     $("#saveCheckin").on("click", function () {
         preLogMemberIn();
     });
+
+    $("#person").css("text-align", "center");
+    $("#nonperson").css("text-align", "center");
 });
 
 //region Login&Cookies
@@ -558,10 +561,12 @@ function logProxyMemberIn(_data) {
             if (result === "True") {
                 if (navigator.notification != undefined) {
                     $(".pbtn").css("visibility", "hidden");
+                    $("#person").prop('readonly', true);
                     navigator.notification.alert("Member proxy registered!", fakeCallback, "Member Registration", "Ok");                    
                 }
                 else {
                     $(".pbtn").css("visibility", "hidden");
+                    $("#person").prop('readonly', true);
                     alert("Member proxy registered!");
                 }
             }
@@ -593,10 +598,12 @@ function logNonProxyMemberIn(_data) {
             if (result === "True") {
                 if (navigator.notification != undefined) {
                     $(".npbtn").css("visibility", "hidden");
+                    $("#nonperson").prop('readonly', true);
                     navigator.notification.alert("Non-Person proxy registered!", fakeCallback, "Member Registration", "Ok");
                 }
                 else {
                     $(".npbtn").css("visibility", "hidden");
+                    $("#nonperson").prop('readonly', true);
                     alert("Non-Person proxy registered!");                    
                 }
             }
@@ -791,10 +798,11 @@ function getProxyInfo() {
         $("#person").val("");
         $("#nonperson").val("");
 
-        //$("#personContent :input").prop("disabled", false);
-        //$("#nonpersonContent :input").prop("disabled", false);
         $(".pbtn").css("visibility", "");
         $(".npbtn").css("visibility", "");
+
+        $("#person").prop('readonly', false);
+        $("#nonperson").prop('readonly', false);
 
 
         var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
@@ -812,17 +820,13 @@ function getProxyInfo() {
                     for (var i = 0; i < results.length; i++) {
                         if (results[i].PTYPE == "1") {
                             $("#person").val(results[i].MEMBERSEP);
-                            //$("#personContent :input[type='button']").prop("disabled", true);
-
                             $(".pbtn").css("visibility", "hidden");
-                            
+                            $("#person").prop('readonly', true);
                         }
                         else if (results[i].PTYPE == "2") {
-                            $("#nonperson").val(results[i].MEMBERSEP);
-                            //$("#nonpersonContent :input[type='button']").prop("disabled", true);
-
+                            $("#nonperson").val(results[i].MEMBERSEP);                            
                             $(".npbtn").css("visibility", "hidden");
-                            
+                            $("#nonperson").prop('readonly', true);
                         }
                     }
                 }
