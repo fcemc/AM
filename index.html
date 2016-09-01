@@ -109,26 +109,26 @@
             <div id="proxyFields" style="color: black; text-align: center; padding-bottom:10px; visibility:hidden; height:0;">
                 <label>Person:</label>
                 <div id="personContent">
-                    <div style='display:inline-block;'>
-                        <input id="pbtn1" type='button' onclick='scanPerson();' value='Scan' />
+                    <div class="pbtn" style='display:inline-block;'>
+                        <input type='button' onclick='scanPerson();' value='Scan' />
                     </div>
                     <div style='display:inline-block; vertical-align:top; padding-top:2px;'>
                         <input id='person' type='number' />
                     </div>
-                    <div style='display:inline-block;'>
-                        <input id="pbtn2" type='button' onclick='searchPerson();' value='Register' />
+                    <div class="pbtn" style='display:inline-block;'>
+                        <input type='button' onclick='searchPerson();' value='Register' />
                     </div>
                 </div>
                 <label>Non-Person:</label>
                 <div id="nonpersonContent">
-                    <div style='display:inline-block;'>
-                        <input id="npbtn1" type='button' onclick='scanNonPerson();' value='Scan' />
+                    <div class="npbtn" style='display:inline-block;'>
+                        <input type='button' onclick='scanNonPerson();' value='Scan' />
                     </div>
                     <div style='display:inline-block; vertical-align:top; padding-top:2px;'>
                         <input id='nonperson' type='number' />
                     </div>
-                    <div style='display:inline-block;'>
-                        <input id="npbtn1" type='button' onclick='searchNonPerson();' value='Register' />
+                    <div class="npbtn" style='display:inline-block;'>
+                        <input type='button' onclick='searchNonPerson();' value='Register' />
                     </div>
                 </div>
             </div>
@@ -194,8 +194,7 @@
                 </table>
 
 
-                <table id="county">
-                    
+                <table id="county">                    
                     <tr>
                         <th style="width:200px">County</th>
                         <th>Minority</th>
