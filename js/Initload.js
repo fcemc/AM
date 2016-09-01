@@ -557,12 +557,12 @@ function logProxyMemberIn(_data) {
         success: function (result) {
             if (result === "True") {
                 if (navigator.notification != undefined) {
-                    navigator.notification.alert("Member proxy registered!", fakeCallback, "Member Registration", "Ok");
-                    $("#personContent :input[type='button']").prop("disabled", true);
+                    $(".pbtn").css("visibility", "hidden");
+                    navigator.notification.alert("Member proxy registered!", fakeCallback, "Member Registration", "Ok");                    
                 }
                 else {
+                    $(".pbtn").css("visibility", "hidden");
                     alert("Member proxy registered!");
-                    $("#personContent :input[type='button']").prop("disabled", true);
                 }
             }
             else {
@@ -592,12 +592,12 @@ function logNonProxyMemberIn(_data) {
         success: function (result) {
             if (result === "True") {
                 if (navigator.notification != undefined) {
+                    $(".npbtn").css("visibility", "hidden");
                     navigator.notification.alert("Non-Person proxy registered!", fakeCallback, "Member Registration", "Ok");
-                    $("#nonpersonContent :input[type='button']").prop("disabled", true);
                 }
                 else {
-                    alert("Non-Person proxy registered!");
-                    $("#nonpersonContent :input[type='button']").prop("disabled", true);
+                    $(".npbtn").css("visibility", "hidden");
+                    alert("Non-Person proxy registered!");                    
                 }
             }
             else {
@@ -791,8 +791,11 @@ function getProxyInfo() {
         $("#person").val("");
         $("#nonperson").val("");
 
-        $("#personContent :input").prop("disabled", false);
-        $("#nonpersonContent :input").prop("disabled", false);
+        //$("#personContent :input").prop("disabled", false);
+        //$("#nonpersonContent :input").prop("disabled", false);
+        $(".pbtn").css("visibility", "");
+        $(".npbtn").css("visibility", "");
+
 
         var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
         $.ajax({
@@ -809,11 +812,17 @@ function getProxyInfo() {
                     for (var i = 0; i < results.length; i++) {
                         if (results[i].PTYPE == "1") {
                             $("#person").val(results[i].MEMBERSEP);
-                            $("#personContent :input[type='button']").prop("disabled", true);
+                            //$("#personContent :input[type='button']").prop("disabled", true);
+
+                            $(".pbtn").css("visibility", "hidden");
+                            
                         }
                         else if (results[i].PTYPE == "2") {
                             $("#nonperson").val(results[i].MEMBERSEP);
-                            $("#nonpersonContent :input[type='button']").prop("disabled", true);
+                            //$("#nonpersonContent :input[type='button']").prop("disabled", true);
+
+                            $(".npbtn").css("visibility", "hidden");
+                            
                         }
                     }
                 }
