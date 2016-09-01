@@ -87,43 +87,11 @@
   <plugin name="org.apache.cordova.vibration" />
   <plugin name="org.apache.cordova.statusbar" />
   <plugin name="phonegap-plugin-barcodescanner" />
-
-  <!--<gap:plugin name="com.phonegap.plugins.pushplugin" />
-  <gap:plugin name="de.appplant.cordova.plugin.badge" />-->
   
   
-  <!-- Third party plugins -->
-  <!-- A list of available plugins are available at https://build.phonegap.com/plugins -->
-  <!--
-        <gap:plugin name="com.phonegap.plugins.barcodescanner" />
-    -->
-
-  <!-- Define app icon for each platform. -->
-  <!--<icon src="img/EMCLogoGreen.png" />
-  <icon src="res/icon/android/icon-36-ldpi.png"   platform="android"    gap:qualifier="ldpi" />
-  <icon src="res/icon/android/icon-48-mdpi.png"   platform="android"    gap:qualifier="mdpi" />
-  <icon src="res/icon/android/icon-72-hdpi.png"   platform="android"    gap:qualifier="hdpi" />
-  <icon src="res/icon/android/icon-96-xhdpi.png"  platform="android"    gap:qualifier="xhdpi" />
-  <icon src="res/icon/ios/icon-57.png"            platform="ios"        width="57" height="57" />
-  <icon src="res/icon/ios/icon-72.png"            platform="ios"        width="72" height="72" />
-  <icon src="res/icon/ios/icon-57-2x.png"         platform="ios"        width="114" height="114" />
-  <icon src="res/icon/ios/icon-72-2x.png"         platform="ios"        width="144" height="144" />-->
-  <icon src="res/icon/webos/icon-64.png"          platform="webos" />
-
-  <!-- Define app splash screen for each platform. -->
-  
-   <!--<splash src="res/screen/android/screen-ldpi-portrait.png"       platform="android" qualifier="port-ldpi" />
-  <splash src="res/screen/android/screen-mdpi-portrait.png"       platform="android" qualifier="port-mdpi" />
-  <splash src="res/screen/android/screen-hdpi-portrait.png"       platform="android" qualifier="port-hdpi" />
-  <splash src="res/screen/android/screen-xhdpi-portrait.png"      platform="android" qualifier="port-xhdpi" />  
- <splash src="res/screen/ios/screen-iphone-portrait.png"         platform="ios"     width="320" height="480" />
-  <splash src="res/screen/ios/screen-iphone-portrait-2x.png"      platform="ios"     width="640" height="960" />
-  <splash src="res/screen/ios/screen-iphone-portrait-568h-2x.png" platform="ios"     width="640" height="1136" />
-  <splash src="res/screen/ios/screen-ipad-portrait.png"           platform="ios"     width="768" height="1024" />
-  <splash src="res/screen/ios/screen-ipad-landscape.png"          platform="ios"     width="1024" height="768" />-->
+  <!--<icon src="res/icon/webos/icon-64.png"          platform="webos" />-->
 
   <icon src="icon.png" />
-  <icon src="img/EMCLogoGreen.png" />
   <platform name="android">    
     <icon src="res/icon/android/icon-36-ldpi.png" qualifier="ldpi" />
     <icon src="res/icon/android/icon-48-mdpi.png" qualifier="mdpi" />
@@ -137,7 +105,6 @@
     <icon src="res/icon/ios/icon-57-2x.png" width="114" height="114" />
     <icon src="res/icon/ios/icon-72-2x.png" width="144" height="144" />
   </platform>
-
 
   <splash src="splash.png" />
   <platform name="android">
