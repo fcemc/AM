@@ -87,7 +87,7 @@ $(document).ready(function () {
                     var value = args.cell.value();
                     memData.push(title + "|" + value);
                 }
-                changePage('checkInPage');
+                $("body").pagecontainer("change", "#checkInPage");
                 beginCheckIn(memData);
             }
         }
@@ -293,15 +293,6 @@ function fakeCallback() { }
 //endregion
 
 //manual lookup region
-function changePage(page) {
-    $.mobile.pageContainer.pagecontainer("change", "#" + page, {
-        transition: 'flip',
-        changeHash: false,
-        reverse: true,
-        showLoadMsg: true
-    });
-}
-
 function getMember(scanResult) {
     if ($("#member-autocomplete-input").val().length >= 3) {
         var v = $("#member-autocomplete-input").val();
@@ -346,7 +337,7 @@ function getMemberScanInfo(paramItems) {
                     memData.push("PROXY|");
                     //memData.push("PTYPE|''");
                     beginCheckIn(memData);
-                    changePage('checkInPage');
+                    $("body").pagecontainer("change", "#checkInPage");
                 }
                 else if (results[0].VOTE.toString() != "0") {
                     var memData = [];
@@ -362,7 +353,7 @@ function getMemberScanInfo(paramItems) {
                     memData.push("PROXY|" + results[0].PROXY.toString());
                     //memData.push("PTYPE|''");
                     beginCheckIn(memData);
-                    changePage('checkInPage');
+                    $("body").pagecontainer("change", "#checkInPage");
                 }
             }
             else if (results.length > 1) {
@@ -467,9 +458,8 @@ function beginCheckIn(memData) {
 function resetForm() {
     $("input.memberCheckIn[type=radio]").prop('checked', false).checkboxradio("refresh");
     $("#member-autocomplete-input").val("");
-    $("#memgridContainer").hide();
-    //$("body").pagecontainer("change", "page1");
-    changePage('page1');
+    $("#memgridContainer").hide();    
+    $("body").pagecontainer("change", "#page1");    
     clearProxyInfo();
 }
 
@@ -512,8 +502,6 @@ function preLogMemberIn() {
         }
     }
     else if ($("#logmem_VOTE").text() == "Yes") {
-        
-
         if (navigator.notification != undefined) {
             navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
         }
