@@ -133,6 +133,7 @@ $(document).ready(function () {
     });
 
     $("#saveCheckin").on("click", function () {
+        $("#spinCont").show();
         preLogMemberIn();
     });
 
@@ -505,6 +506,7 @@ function preLogMemberIn() {
             logMemberIn(_data);
         }
         else {
+            $("#spinCont").hide();
             $("#popuppopupCheckinError p").text("You need to make a selection!");
             $("#popuppopupCheckinError").popup("open");
         }
@@ -516,6 +518,7 @@ function preLogMemberIn() {
         else {
             alert("Member already registered!");
         }
+        $("#spinCont").hide();
     }
 
 }
@@ -528,6 +531,9 @@ function logMemberIn(_data) {
         contentType: "application/json",
         data: JSON.stringify(_data),
         cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
         success: function (result) {
             if (result === "True") {
                 $("#popupCheckinSuccess").popup("open");
@@ -537,6 +543,9 @@ function logMemberIn(_data) {
                 $("#popuppopupCheckinError p").text(result);
                 $("#popuppopupCheckinError").popup("open");
             }
+        },
+        complete: function () {
+            $("#spinCont").hide();
         },
         error: function (textStatus, errorThrown) {
             var txt = textStatus;
