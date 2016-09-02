@@ -139,19 +139,6 @@ $(document).ready(function () {
     $("#person").css("text-align", "center");
     $("#nonperson").css("text-align", "center");
 
-
-    //function stopRKey(evt) {
-    //    var evt = (evt) ? evt : ((event) ? event : null);
-    //    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-    //    if (evt.keyCode == 13) {
-    //        return false;
-    //    }
-    //    //if ((evt.keyCode == 13) && (node.type == "text")) { return false; }
-    //    //if ((evt.keyCode == 13) && (node.type=="email")) {return false;}
-    //    //if ((evt.keyCode == 13) && (node.type=="tel")) {return false;}
-    //    //if ((evt.keyCode == 13) && (node.type=="number")) {return false;}
-    //}
-
     $("body").keydown(function () {
         if (event.keyCode == 13) {
             document.activeElement.blur();
