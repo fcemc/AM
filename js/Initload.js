@@ -117,7 +117,7 @@ $(document).ready(function () {
         }
         else {
             resetForm();
-        }        
+        }
     });
 
     $("#popuppopupCheckinError").popup({ history: false });
@@ -138,6 +138,27 @@ $(document).ready(function () {
 
     $("#person").css("text-align", "center");
     $("#nonperson").css("text-align", "center");
+
+
+    //function stopRKey(evt) {
+    //    var evt = (evt) ? evt : ((event) ? event : null);
+    //    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+    //    if (evt.keyCode == 13) {
+    //        return false;
+    //    }
+    //    //if ((evt.keyCode == 13) && (node.type == "text")) { return false; }
+    //    //if ((evt.keyCode == 13) && (node.type=="email")) {return false;}
+    //    //if ((evt.keyCode == 13) && (node.type=="tel")) {return false;}
+    //    //if ((evt.keyCode == 13) && (node.type=="number")) {return false;}
+    //}
+
+    $("body").keydown(function () {
+        if (event.keyCode == 13) {
+            document.activeElement.blur();
+            return false;
+        }
+    });
+
 });
 
 //region Login&Cookies
@@ -285,7 +306,7 @@ function quitRegistration(button) {
         resetForm();
     }
     else if (button == 1) {
-        
+
     }
 }
 
@@ -331,7 +352,7 @@ function getMemberScanInfo(paramItems) {
                     memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
                     memData.push("BILLADDR|" + results[0].BILLADDR.toString());
                     memData.push("SERVADDR|" + results[0].SERVADDR.toString());
-                    memData.push("PHONE|" + results[0].PHONE.toString());                    
+                    memData.push("PHONE|" + results[0].PHONE.toString());
                     memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
                     memData.push("METER|" + results[0].METER.toString());
                     memData.push("PROXY|");
@@ -458,8 +479,8 @@ function beginCheckIn(memData) {
 function resetForm() {
     $("input.memberCheckIn[type=radio]").prop('checked', false).checkboxradio("refresh");
     $("#member-autocomplete-input").val("");
-    $("#memgridContainer").hide();    
-    $("body").pagecontainer("change", "#page1");    
+    $("#memgridContainer").hide();
+    $("body").pagecontainer("change", "#page1");
     clearProxyInfo();
 }
 
@@ -550,7 +571,7 @@ function logProxyMemberIn(_data) {
                 if (navigator.notification != undefined) {
                     $(".pbtn").css("visibility", "hidden");
                     $("#person").prop('readonly', true);
-                    navigator.notification.alert("Member proxy registered!", fakeCallback, "Member Registration", "Ok");                    
+                    navigator.notification.alert("Member proxy registered!", fakeCallback, "Member Registration", "Ok");
                 }
                 else {
                     $(".pbtn").css("visibility", "hidden");
@@ -592,7 +613,7 @@ function logNonProxyMemberIn(_data) {
                 else {
                     $(".npbtn").css("visibility", "hidden");
                     $("#nonperson").prop('readonly', true);
-                    alert("Non-Person proxy registered!");                    
+                    alert("Non-Person proxy registered!");
                 }
             }
             else {
@@ -635,7 +656,7 @@ function getStats() {
                 $("#b4").text(checkNull(_d[0].NONATTEND));
                 $("#b5").text(checkNull(_d[0].TOTAL));
             }
-            
+
             if (_d[1] != undefined) {
                 $("#e1").text(checkNull(_d[1].MIN));
                 $("#e2").text(checkNull(_d[1].NONMIN));
@@ -702,8 +723,8 @@ function getStats() {
                 $("#s5").text(checkNull(_c[5].TOTAL));
             }
 
-            $("#district  table tr td").eq(0).css('width','200px');
-            $("#county  table tr td").eq(0).css('width','200px');
+            $("#district  table tr td").eq(0).css('width', '200px');
+            $("#county  table tr td").eq(0).css('width', '200px');
 
 
         },
@@ -812,7 +833,7 @@ function getProxyInfo() {
                             $("#person").prop('readonly', true);
                         }
                         else if (results[i].PTYPE == "2") {
-                            $("#nonperson").val(results[i].MEMBERSEP);                            
+                            $("#nonperson").val(results[i].MEMBERSEP);
                             $(".npbtn").css("visibility", "hidden");
                             $("#nonperson").prop('readonly', true);
                         }
@@ -844,7 +865,7 @@ function scanPerson() {
         localStorage.setItem("fcemcInventory_scanning", true);
         cordova.plugins.barcodeScanner.scan(
           function (result) {
-              if (result.cancelled != 1) {                  
+              if (result.cancelled != 1) {
                   $("#person").val(result.text.trim(result.text));
                   searchPerson();
               }
