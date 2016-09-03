@@ -555,77 +555,97 @@ function logMemberIn(_data) {
 }
 
 function logProxyMemberIn(_data) {
-    $.ajax({
-        type: "POST",
-        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
-        dataType: "json",
-        contentType: "application/json",
-        data: JSON.stringify(_data),
-        cache: false,
-        success: function (result) {
-            if (result === "True") {
-                if (navigator.notification != undefined) {
-                    $(".pbtn").css("visibility", "hidden");
-                    $("#person").prop('readonly', true);
-                    navigator.notification.alert("Member proxy registered!", fakeCallback, "Member Registration", "Ok");
+    if (_data.MBRNO != $("#person").val().substring(0, ($("#person").val().length - 3))) {
+        $.ajax({
+            type: "POST",
+            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(_data),
+            cache: false,
+            success: function (result) {
+                if (result === "True") {
+                    if (navigator.notification != undefined) {
+                        $(".pbtn").css("visibility", "hidden");
+                        $("#person").prop('readonly', true);
+                        navigator.notification.alert("Member proxy registered!", fakeCallback, "Member Registration", "Ok");
+                    }
+                    else {
+                        $(".pbtn").css("visibility", "hidden");
+                        $("#person").prop('readonly', true);
+                        alert("Member proxy registered!");
+                    }
                 }
                 else {
-                    $(".pbtn").css("visibility", "hidden");
-                    $("#person").prop('readonly', true);
-                    alert("Member proxy registered!");
+                    if (navigator.notification != undefined) {
+                        navigator.notification.alert("Member proxy was not registered! " + result, fakeCallback, "Member Registration", "Ok");
+                    }
+                    else {
+                        alert("Member proxy was not registered! " + result);
+                    }
                 }
+            },
+            error: function (textStatus, errorThrown) {
+                var txt = textStatus;
+                var et = errorThrown;
             }
-            else {
-                if (navigator.notification != undefined) {
-                    navigator.notification.alert("Member proxy was not registered! " + result, fakeCallback, "Member Registration", "Ok");
-                }
-                else {
-                    alert("Member proxy was not registered! " + result);
-                }
-            }
-        },
-        error: function (textStatus, errorThrown) {
-            var txt = textStatus;
-            var et = errorThrown;
+        });
+    }
+    else {
+        if (navigator.notification != undefined) {
+            navigator.notification.alert("Same MBRSEP number as member!", fakeCallback, "Member Registration", "Ok");
         }
-    });
+        else {
+            alert("Same MBRSEP number as member!");
+        }
+    }
 }
 
 function logNonProxyMemberIn(_data) {
-    $.ajax({
-        type: "POST",
-        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
-        dataType: "json",
-        contentType: "application/json",
-        data: JSON.stringify(_data),
-        cache: false,
-        success: function (result) {
-            if (result === "True") {
-                if (navigator.notification != undefined) {
-                    $(".npbtn").css("visibility", "hidden");
-                    $("#nonperson").prop('readonly', true);
-                    navigator.notification.alert("Non-Person proxy registered!", fakeCallback, "Member Registration", "Ok");
+    if (_data.MBRNO != $("#nonperson").val().substring(0, ($("#nonperson").val().length - 3))) {
+        $.ajax({
+            type: "POST",
+            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(_data),
+            cache: false,
+            success: function (result) {
+                if (result === "True") {
+                    if (navigator.notification != undefined) {
+                        $(".npbtn").css("visibility", "hidden");
+                        $("#nonperson").prop('readonly', true);
+                        navigator.notification.alert("Non-Person proxy registered!", fakeCallback, "Member Registration", "Ok");
+                    }
+                    else {
+                        $(".npbtn").css("visibility", "hidden");
+                        $("#nonperson").prop('readonly', true);
+                        alert("Non-Person proxy registered!");
+                    }
                 }
                 else {
-                    $(".npbtn").css("visibility", "hidden");
-                    $("#nonperson").prop('readonly', true);
-                    alert("Non-Person proxy registered!");
+                    if (navigator.notification != undefined) {
+                        navigator.notification.alert("Non-Person proxy was not registered! " + result, fakeCallback, "Member Registration", "Ok");
+                    }
+                    else {
+                        alert("Non-Person proxy was not registered! " + result);
+                    }
                 }
+            },
+            error: function (textStatus, errorThrown) {
+                var txt = textStatus;
+                var et = errorThrown;
             }
-            else {
-                if (navigator.notification != undefined) {
-                    navigator.notification.alert("Non-Person proxy was not registered! " + result, fakeCallback, "Member Registration", "Ok");
-                }
-                else {
-                    alert("Non-Person proxy was not registered! " + result);
-                }
-            }
-        },
-        error: function (textStatus, errorThrown) {
-            var txt = textStatus;
-            var et = errorThrown;
+        });
+    }
+    else {
+        if (navigator.notification != undefined) {
+            navigator.notification.alert("Same MBRSEP number as member!", fakeCallback, "Member Registration", "Ok");
         }
-    });
+        else {
+            alert("Same MBRSEP number as member!");
+        }
+    }
 }
 
 function getStats() {
@@ -998,6 +1018,29 @@ function searchNonPerson() {
                     alert("No member found!");
                 }
             }
+        },
+        complete: function () {
+            $("#spinCont").hide();
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
+}
+
+function unregisterPersonProxy() {
+    var paramItems = $("#person").val().substring(0, ($("#person").val().length - 3)) + "|" + $("#logmem_MEMBERSEP").text();
+    $.ajax({
+        type: "GET",
+        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/UNREGISTER/" + paramItems,
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
+        success: function (result) {
+
         },
         complete: function () {
             $("#spinCont").hide();
