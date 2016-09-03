@@ -555,7 +555,7 @@ function logMemberIn(_data) {
 }
 
 function logProxyMemberIn(_data) {
-    if (_data.MBRNO != $("#person").val().substring(0, ($("#person").val().length - 3))) {
+    if ($("#logmem_MEMBERSEP").text().substring(0, ($("#logmem_MEMBERSEP").text().length - 3)) != _data.MBRNO) {
         $.ajax({
             type: "POST",
             url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
@@ -602,7 +602,7 @@ function logProxyMemberIn(_data) {
 }
 
 function logNonProxyMemberIn(_data) {
-    if (_data.MBRNO != $("#nonperson").val().substring(0, ($("#nonperson").val().length - 3))) {
+    if ($("#logmem_MEMBERSEP").text().substring(0, ($("#logmem_MEMBERSEP").text().length - 3)) != _data.MBRNO) {
         $.ajax({
             type: "POST",
             url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
