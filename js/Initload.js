@@ -663,85 +663,90 @@ function getStats() {
             $("#statsData").empty();
             var _c = result.MEETINGSTATSResult.COUNTY;
             var _d = result.MEETINGSTATSResult.DIST;
+            var _T = 0;
 
-            //DISTRICTS
-            if (_d[0] != undefined) {
-                $("#b1").text(checkNull(_d[0].MIN));
-                $("#b2").text(checkNull(_d[0].NONMIN));
-                $("#b3").text(checkNull(_d[0].ATTEND));
-                $("#b4").text(checkNull(_d[0].NONATTEND));
-                $("#b5").text(checkNull(_d[0].TOTAL));
+            if (_d.length > 0) {
+
+                //DISTRICTS
+                if (_d[0] != undefined) {
+                    $("#b1").text(checkNull(_d[0].MIN));
+                    $("#b2").text(checkNull(_d[0].NONMIN));
+                    $("#b3").text(checkNull(_d[0].ATTEND));
+                    $("#b4").text(checkNull(_d[0].NONATTEND));
+                    $("#b5").text(checkNull(_d[0].TOTAL));
+                }
+
+                if (_d[1] != undefined) {
+                    $("#e1").text(checkNull(_d[1].MIN));
+                    $("#e2").text(checkNull(_d[1].NONMIN));
+                    $("#e3").text(checkNull(_d[1].ATTEND));
+                    $("#e4").text(checkNull(_d[1].NONATTEND));
+                    $("#e5").text(checkNull(_d[1].TOTAL));
+                }
+
+                if (_d[2] != undefined) {
+                    $("#r1").text(checkNull(_d[2].MIN));
+                    $("#r2").text(checkNull(_d[2].NONMIN));
+                    $("#r3").text(checkNull(_d[2].ATTEND));
+                    $("#r4").text(checkNull(_d[2].NONATTEND));
+                    $("#r5").text(checkNull(_d[2].TOTAL));
+                }
+
+                T = parseInt(checkUndefined(_d[0])) + parseInt(checkUndefined(_d[1])) + parseInt(checkUndefined(_d[2]));
+                $("#grandT").html("Grand Total: " + T);
+
+                //Countys
+                if (_c[0] != undefined) {
+                    $("#bl1").text(checkNull(_c[0].MIN));
+                    $("#bl2").text(checkNull(_c[0].NONMIN));
+                    $("#bl3").text(checkNull(_c[0].ATTEND));
+                    $("#bl4").text(checkNull(_c[0].NONATTEND));
+                    $("#bl5").text(checkNull(_c[0].TOTAL));
+                }
+
+                if (_c[1] != undefined) {
+                    $("#c1").text(checkNull(_c[1].MIN));
+                    $("#c2").text(checkNull(_c[1].NONMIN));
+                    $("#c3").text(checkNull(_c[1].ATTEND));
+                    $("#c4").text(checkNull(_c[1].NONATTEND));
+                    $("#c5").text(checkNull(_c[1].TOTAL));
+                }
+
+                if (_c[2] != undefined) {
+                    $("#d1").text(checkNull(_c[2].MIN));
+                    $("#d2").text(checkNull(_c[2].NONMIN));
+                    $("#d3").text(checkNull(_c[2].ATTEND));
+                    $("#d4").text(checkNull(_c[2].NONATTEND));
+                    $("#d5").text(checkNull(_c[2].TOTAL));
+                }
+
+                if (_c[3] != undefined) {
+                    $("#o1").text(checkNull(_c[3].MIN));
+                    $("#o2").text(checkNull(_c[3].NONMIN));
+                    $("#o3").text(checkNull(_c[3].ATTEND));
+                    $("#o4").text(checkNull(_c[3].NONATTEND));
+                    $("#o5").text(checkNull(_c[3].TOTAL));
+                }
+
+                if (_c[4] != undefined) {
+                    $("#p1").text(checkNull(_c[4].MIN));
+                    $("#p2").text(checkNull(_c[4].NONMIN));
+                    $("#p3").text(checkNull(_c[4].ATTEND));
+                    $("#p4").text(checkNull(_c[4].NONATTEND));
+                    $("#p5").text(checkNull(_c[4].TOTAL));
+                }
+
+                if (_c[5] != undefined) {
+                    $("#s1").text(checkNull(_c[5].MIN));
+                    $("#s2").text(checkNull(_c[5].NONMIN));
+                    $("#s3").text(checkNull(_c[5].ATTEND));
+                    $("#s4").text(checkNull(_c[5].NONATTEND));
+                    $("#s5").text(checkNull(_c[5].TOTAL));
+                }
+
+                $("#district  table tr td").eq(0).css('width', '200px');
+                $("#county  table tr td").eq(0).css('width', '200px');
             }
-
-            if (_d[1] != undefined) {
-                $("#e1").text(checkNull(_d[1].MIN));
-                $("#e2").text(checkNull(_d[1].NONMIN));
-                $("#e3").text(checkNull(_d[1].ATTEND));
-                $("#e4").text(checkNull(_d[1].NONATTEND));
-                $("#e5").text(checkNull(_d[1].TOTAL));
-            }
-
-            if (_d[2] != undefined) {
-                $("#r1").text(checkNull(_d[2].MIN));
-                $("#r2").text(checkNull(_d[2].NONMIN));
-                $("#r3").text(checkNull(_d[2].ATTEND));
-                $("#r4").text(checkNull(_d[2].NONATTEND));
-                $("#r5").text(checkNull(_d[2].TOTAL));
-            }
-
-
-            //Countys
-            if (_c[0] != undefined) {
-                $("#bl1").text(checkNull(_c[0].MIN));
-                $("#bl2").text(checkNull(_c[0].NONMIN));
-                $("#bl3").text(checkNull(_c[0].ATTEND));
-                $("#bl4").text(checkNull(_c[0].NONATTEND));
-                $("#bl5").text(checkNull(_c[0].TOTAL));
-            }
-
-            if (_c[1] != undefined) {
-                $("#c1").text(checkNull(_c[1].MIN));
-                $("#c2").text(checkNull(_c[1].NONMIN));
-                $("#c3").text(checkNull(_c[1].ATTEND));
-                $("#c4").text(checkNull(_c[1].NONATTEND));
-                $("#c5").text(checkNull(_c[1].TOTAL));
-            }
-
-            if (_c[2] != undefined) {
-                $("#d1").text(checkNull(_c[2].MIN));
-                $("#d2").text(checkNull(_c[2].NONMIN));
-                $("#d3").text(checkNull(_c[2].ATTEND));
-                $("#d4").text(checkNull(_c[2].NONATTEND));
-                $("#d5").text(checkNull(_c[2].TOTAL));
-            }
-
-            if (_c[3] != undefined) {
-                $("#o1").text(checkNull(_c[3].MIN));
-                $("#o2").text(checkNull(_c[3].NONMIN));
-                $("#o3").text(checkNull(_c[3].ATTEND));
-                $("#o4").text(checkNull(_c[3].NONATTEND));
-                $("#o5").text(checkNull(_c[3].TOTAL));
-            }
-
-            if (_c[4] != undefined) {
-                $("#p1").text(checkNull(_c[4].MIN));
-                $("#p2").text(checkNull(_c[4].NONMIN));
-                $("#p3").text(checkNull(_c[4].ATTEND));
-                $("#p4").text(checkNull(_c[4].NONATTEND));
-                $("#p5").text(checkNull(_c[4].TOTAL));
-            }
-
-            if (_c[5] != undefined) {
-                $("#s1").text(checkNull(_c[5].MIN));
-                $("#s2").text(checkNull(_c[5].NONMIN));
-                $("#s3").text(checkNull(_c[5].ATTEND));
-                $("#s4").text(checkNull(_c[5].NONATTEND));
-                $("#s5").text(checkNull(_c[5].TOTAL));
-            }
-
-            $("#district  table tr td").eq(0).css('width', '200px');
-            $("#county  table tr td").eq(0).css('width', '200px');
-
 
         },
         complete: function () {
@@ -752,6 +757,14 @@ function getStats() {
             var et = errorThrown;
         }
     });
+}
+
+function checkUndefined(v) {
+    var _v = 0;
+    if (v != undefined) {
+        _v = v.TOTAL;
+    }
+    return _v;
 }
 
 function clearTableValues() {
