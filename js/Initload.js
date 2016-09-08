@@ -227,34 +227,31 @@ function checkCookie() {
 
 //region lookup region
 function scan() {
-
-    getMemberScanInfo("99999013");
-
-    //try {
-    //    localStorage.setItem("fcemcInventory_scanning", true);
-    //    cordova.plugins.barcodeScanner.scan(
-    //      function (result) {
-    //          if (result.cancelled != 1) {
-    //              getMemberScanInfo(result.text.trim(result.text));
-    //          }
-    //          localStorage.setItem("fcemcInventory_scanning", false);
-    //      },
-    //      function (error) {
-    //          $("#scanText").text("Scanning failed: " + error);
-    //          localStorage.setItem("fcemcInventory_scanning", false);
-    //      },
-    //      {
-    //          "preferFrontCamera": false, // iOS and Android
-    //          "showFlipCameraButton": true, // iOS and Android
-    //          "prompt": "Place a barcode inside the scan area", // supported on Android only
-    //          //"formats": "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-    //          "orientation": "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
-    //      }
-    //   );
-    //}
-    //catch (err) {
-    //    alert(err.message.toString());
-    //}
+    try {
+        localStorage.setItem("fcemcInventory_scanning", true);
+        cordova.plugins.barcodeScanner.scan(
+          function (result) {
+              if (result.cancelled != 1) {
+                  getMemberScanInfo(result.text.trim(result.text));
+              }
+              localStorage.setItem("fcemcInventory_scanning", false);
+          },
+          function (error) {
+              $("#scanText").text("Scanning failed: " + error);
+              localStorage.setItem("fcemcInventory_scanning", false);
+          },
+          {
+              "preferFrontCamera": false, // iOS and Android
+              "showFlipCameraButton": true, // iOS and Android
+              "prompt": "Place a barcode inside the scan area", // supported on Android only
+              //"formats": "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+              "orientation": "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
+          }
+       );
+    }
+    catch (err) {
+        alert(err.message.toString());
+    }
 }
 
 function getSpinner() {
@@ -1071,8 +1068,7 @@ function unregisterPersonProxy() {
 
 function checkNull(val) {
     var _val = ""
-    if(val != null)
-    {
+    if (val != null) {
         _val = val.toString();
     }
     return _val;
