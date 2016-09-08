@@ -1,4 +1,5 @@
 ﻿var tryingToReconnect = false, user, scanResult = 0;
+var serviceURL = "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/";
 
 $(document).ready(function () {
     //adjust for status bar in iOS
@@ -156,7 +157,7 @@ function checkLogin() {
     var paramItems = user + "|" + _pw;
     $.ajax({
         type: "GET",
-        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/authenticateYouSir/" + paramItems,
+        url: serviceURL + "authenticateYouSir/" + paramItems,
         contentType: "application/json; charset=utf-8",
         cache: false,
         success: function (results) {
@@ -226,31 +227,34 @@ function checkCookie() {
 
 //region lookup region
 function scan() {
-    try {
-        localStorage.setItem("fcemcInventory_scanning", true);
-        cordova.plugins.barcodeScanner.scan(
-          function (result) {
-              if (result.cancelled != 1) {
-                  getMemberScanInfo(result.text.trim(result.text));
-              }
-              localStorage.setItem("fcemcInventory_scanning", false);
-          },
-          function (error) {
-              $("#scanText").text("Scanning failed: " + error);
-              localStorage.setItem("fcemcInventory_scanning", false);
-          },
-          {
-              "preferFrontCamera": false, // iOS and Android
-              "showFlipCameraButton": true, // iOS and Android
-              "prompt": "Place a barcode inside the scan area", // supported on Android only
-              //"formats": "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-              "orientation": "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
-          }
-       );
-    }
-    catch (err) {
-        alert(err.message.toString());
-    }
+
+    getMemberScanInfo("99999013");
+
+    //try {
+    //    localStorage.setItem("fcemcInventory_scanning", true);
+    //    cordova.plugins.barcodeScanner.scan(
+    //      function (result) {
+    //          if (result.cancelled != 1) {
+    //              getMemberScanInfo(result.text.trim(result.text));
+    //          }
+    //          localStorage.setItem("fcemcInventory_scanning", false);
+    //      },
+    //      function (error) {
+    //          $("#scanText").text("Scanning failed: " + error);
+    //          localStorage.setItem("fcemcInventory_scanning", false);
+    //      },
+    //      {
+    //          "preferFrontCamera": false, // iOS and Android
+    //          "showFlipCameraButton": true, // iOS and Android
+    //          "prompt": "Place a barcode inside the scan area", // supported on Android only
+    //          //"formats": "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+    //          "orientation": "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
+    //      }
+    //   );
+    //}
+    //catch (err) {
+    //    alert(err.message.toString());
+    //}
 }
 
 function getSpinner() {
@@ -322,7 +326,7 @@ function getMember(scanResult) {
 function getMemberScanInfo(paramItems) {
     $.ajax({
         type: "GET",
-        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLISTSCAN/" + paramItems,
+        url: serviceURL + "MEMBERLISTSCAN/" + paramItems,
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
@@ -335,14 +339,14 @@ function getMemberScanInfo(paramItems) {
                 if (results[0].VOTE == null) {
                     var memData = [];
                     memData.push("VOTE|0");
-                    memData.push("NAME|" + results[0].NAME.toString());
-                    memData.push("MEMBERNO|" + results[0].MEMBERNO.toString());
-                    memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
-                    memData.push("BILLADDR|" + results[0].BILLADDR.toString());
-                    memData.push("SERVADDR|" + results[0].SERVADDR.toString());
-                    memData.push("PHONE|" + results[0].PHONE.toString());
-                    memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
-                    memData.push("METER|" + results[0].METER.toString());
+                    memData.push("NAME|" + checkNull(results[0].NAME));
+                    memData.push("MEMBERNO|" + checkNull(results[0].MEMBERNO));
+                    memData.push("MEMBERSEP|" + checkNull(results[0].MEMBERSEP));
+                    memData.push("BILLADDR|" + checkNull(results[0].BILLADDR));
+                    memData.push("SERVADDR|" + checkNull(results[0].SERVADDR));
+                    memData.push("PHONE|" + checkNull(results[0].PHONE));
+                    memData.push("MAPNUMBER|" + checkNull(results[0].MAPNUMBER));
+                    memData.push("METER|" + checkNull(results[0].METER));
                     memData.push("PROXY|");
                     //memData.push("PTYPE|''");
                     beginCheckIn(memData);
@@ -350,16 +354,16 @@ function getMemberScanInfo(paramItems) {
                 }
                 else if (results[0].VOTE.toString() != "0") {
                     var memData = [];
-                    memData.push("VOTE|" + results[0].VOTE.toString());
-                    memData.push("NAME|" + results[0].NAME.toString());
-                    memData.push("MEMBERNO|" + results[0].MEMBERNO.toString());
-                    memData.push("MEMBERSEP|" + results[0].MEMBERSEP.toString());
-                    memData.push("BILLADDR|" + results[0].BILLADDR.toString());
-                    memData.push("SERVADDR|" + results[0].SERVADDR.toString());
-                    memData.push("PHONE|" + results[0].PHONE.toString());
-                    memData.push("MAPNUMBER|" + results[0].MAPNUMBER.toString());
-                    memData.push("METER|" + results[0].METER.toString());
-                    memData.push("PROXY|" + results[0].PROXY.toString());
+                    memData.push("VOTE|" + checkNull(results[0].VOTE));
+                    memData.push("NAME|" + checkNull(results[0].NAME));
+                    memData.push("MEMBERNO|" + checkNull(results[0].MEMBERNO));
+                    memData.push("MEMBERSEP|" + checkNull(results[0].MEMBERSEP));
+                    memData.push("BILLADDR|" + checkNull(results[0].BILLADDR));
+                    memData.push("SERVADDR|" + checkNull(results[0].SERVADDR));
+                    memData.push("PHONE|" + checkNull(results[0].PHONE));
+                    memData.push("MAPNUMBER|" + checkNull(results[0].MAPNUMBER));
+                    memData.push("METER|" + checkNull(results[0].METER));
+                    memData.push("PROXY|" + checkNull(results[0].PROXY));
                     //memData.push("PTYPE|''");
                     beginCheckIn(memData);
                     $("body").pagecontainer("change", "#checkInPage");
@@ -417,7 +421,7 @@ function getMemberScanInfo(paramItems) {
 function getMemberInfo(paramItems) {
     $.ajax({
         type: "GET",
-        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + paramItems,
+        url: serviceURL + "MEMBERLIST/" + paramItems,
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
@@ -526,7 +530,7 @@ function preLogMemberIn() {
 function logMemberIn(_data) {
     $.ajax({
         type: "POST",
-        url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
+        url: serviceURL + "memberCheckIn",
         dataType: "json",
         contentType: "application/json",
         data: JSON.stringify(_data),
@@ -558,7 +562,7 @@ function logProxyMemberIn(_data) {
     if ($("#logmem_MEMBERSEP").text().substring(0, ($("#logmem_MEMBERSEP").text().length - 3)) != _data.MBRNO) {
         $.ajax({
             type: "POST",
-            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
+            url: serviceURL + "memberCheckIn",
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify(_data),
@@ -605,7 +609,7 @@ function logNonProxyMemberIn(_data) {
     if ($("#logmem_MEMBERSEP").text().substring(0, ($("#logmem_MEMBERSEP").text().length - 3)) != _data.MBRNO) {
         $.ajax({
             type: "POST",
-            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/memberCheckIn",
+            url: serviceURL + "memberCheckIn",
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify(_data),
@@ -653,7 +657,7 @@ function getStats() {
 
     $.ajax({
         type: "GET",
-        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEETINGSTATS",
+        url: serviceURL + "MEETINGSTATS",
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
@@ -846,7 +850,7 @@ function getProxyInfo() {
         var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
         $.ajax({
             type: "GET",
-            url: "http://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLIST/" + paramItems,
+            url: serviceURL + "MEMBERLIST/" + paramItems,
             contentType: "application/json; charset=utf-8",
             cache: false,
             beforeSend: function () {
@@ -923,7 +927,7 @@ function searchPerson() {
 
     $.ajax({
         type: "GET",
-        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLISTSCAN/" + paramItems,
+        url: serviceURL + "MEMBERLISTSCAN/" + paramItems,
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
@@ -999,7 +1003,7 @@ function searchNonPerson() {
     var paramItems = $("#nonperson").val();
     $.ajax({
         type: "GET",
-        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/MEMBERLISTSCAN/" + paramItems,
+        url: serviceURL + "MEMBERLISTSCAN/" + paramItems,
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
@@ -1046,7 +1050,7 @@ function unregisterPersonProxy() {
     var paramItems = $("#person").val().substring(0, ($("#person").val().length - 3)) + "|" + $("#logmem_MEMBERSEP").text();
     $.ajax({
         type: "GET",
-        url: "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/UNREGISTER/" + paramItems,
+        url: serviceURL + "UNREGISTER/" + paramItems,
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
@@ -1064,4 +1068,14 @@ function unregisterPersonProxy() {
         }
     });
 }
+
+function checkNull(val) {
+    var _val = ""
+    if(val != null)
+    {
+        _val = val.toString();
+    }
+    return _val;
+}
+
 //endregion
