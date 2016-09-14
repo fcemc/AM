@@ -45,9 +45,7 @@ $(document).ready(function () {
     $("#memgrid").wijgrid({
         allowSorting: false,
         scrollMode: "auto",
-        columns: [
-            //{ visible: false },
-            //{ visible: false },
+        columns: [            
             {
                 cellFormatter: function (args) {
                     if (args.formattedValue > 0) {
@@ -69,13 +67,16 @@ $(document).ready(function () {
                                 .append(img);                   // add image element 
                         return true;                        // content has been customized 
                     }
-                }
+                }, ensureColumnsPxWidth: false,
             },
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
-            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true }
+            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
+            { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
+            { textAlignment: "center", ensureColumnsPxWidth: false, }
+            
         ],
         cellClicked: function (e, args) {
             if (args.cell._wijgrid != null) {
@@ -94,6 +95,10 @@ $(document).ready(function () {
         }
     });
 
+    $("#memgrid").wijgrid('columns')[0].option('width', '80px');
+    $("#memgrid").wijgrid('columns')[7].option('width', '80px');
+
+    
     $("#member-autocomplete-input").on("input", getMember);
 
     $(".memberSearch").on("click", function () {
@@ -152,41 +157,44 @@ $(document).ready(function () {
 
 //region Login&Cookies
 function checkLogin() {
-    user = $("#un").val().trim();
-    var _pw = $("#pw").val().trim();
-    var paramItems = user + "|" + _pw;
-    $.ajax({
-        type: "GET",
-        url: serviceURL + "authenticateYouSir/" + paramItems,
-        contentType: "application/json; charset=utf-8",
-        cache: false,
-        success: function (results) {
-            if (results.authenticateYouSirResult) {
-                $("#loginError").text("");
+    $.mobile.pageContainer.pagecontainer("change", "#page1");
 
-                $.mobile.pageContainer.pagecontainer("change", "#page1");
-                if (localStorage.fcemcInventory_uname == undefined || localStorage.fcemcInventory_uname == "") {
-                    setCookie(user, _pw, 1); //expires 1 day from inital login
-                }
-            }
-            else {
-                //window.localStorage.clear();
-                localStorage.setItem("fcemcInventory_uname", "");
-                localStorage.setItem("fcemcInventory_pass", "");
 
-                $("#loginError").text("Login Unsucessful");
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            var e = errorThrown;
-            if (!(navigator.onLine)) {
-                $("#loginError").text("No network connection - cannot login!");
-            }
-            else {
-                $("#loginError").text("Login Unsucessful");
-            }
-        }
-    });
+    //user = $("#un").val().trim();
+    //var _pw = $("#pw").val().trim();
+    //var paramItems = user + "|" + _pw;
+    //$.ajax({
+    //    type: "GET",
+    //    url: serviceURL + "authenticateYouSir/" + paramItems,
+    //    contentType: "application/json; charset=utf-8",
+    //    cache: false,
+    //    success: function (results) {
+    //        if (results.authenticateYouSirResult) {
+    //            $("#loginError").text("");
+
+    //            $.mobile.pageContainer.pagecontainer("change", "#page1");
+    //            if (localStorage.fcemcInventory_uname == undefined || localStorage.fcemcInventory_uname == "") {
+    //                setCookie(user, _pw, 1); //expires 1 day from inital login
+    //            }
+    //        }
+    //        else {
+    //            //window.localStorage.clear();
+    //            localStorage.setItem("fcemcInventory_uname", "");
+    //            localStorage.setItem("fcemcInventory_pass", "");
+
+    //            $("#loginError").text("Login Unsucessful");
+    //        }
+    //    },
+    //    error: function (jqXHR, textStatus, errorThrown) {
+    //        var e = errorThrown;
+    //        if (!(navigator.onLine)) {
+    //            $("#loginError").text("No network connection - cannot login!");
+    //        }
+    //        else {
+    //            $("#loginError").text("Login Unsucessful");
+    //        }
+    //    }
+    //});
 }
 
 function setCookie(u, p, t) {
@@ -386,7 +394,7 @@ function getMemberScanInfo(paramItems) {
                                                 .attr("src", "img/check24x24.png") // flag url 
                                             //.attr("height", "100");         // image size 
                                             args.$container
-                                                .css("text-align", "center")    // center the flag 
+                                                .css("text-align", "left")    // center the flag 
                                                 .empty()                        // remove original content 
                                                 .append(img);                   // add image element 
                                             return true;                        // content has been customized 
@@ -419,7 +427,8 @@ function getMemberInfo(paramItems) {
     $.ajax({
         type: "GET",
         url: serviceURL + "MEMBERLIST/" + paramItems,
-        contentType: "application/json; charset=utf-8",
+        contentType: "application/json; charset=utf-8",        
+        dataType: 'jsonp',
         cache: false,
         beforeSend: function () {
             $("#spinCont").show();
@@ -438,6 +447,8 @@ function getMemberInfo(paramItems) {
             $("#memgridContainer").show();
             $("#memgrid").wijgrid("option", "data", data);
             $(".wijmo-wijgrid-headerrow th div").css("background-color", "#0D914F");
+
+            $(".ui-mobile .wijmo-wijgrid .wijmo-wijgrid-headerrow .wijmo-wijgrid-headertext").css("padding-left", "").css("padding-right", "0px");
         },
         complete: function () {
             $("#spinCont").hide();
