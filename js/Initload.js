@@ -157,44 +157,43 @@ $(document).ready(function () {
 
 //region Login&Cookies
 function checkLogin() {
-    $.mobile.pageContainer.pagecontainer("change", "#page1");
+    //$.mobile.pageContainer.pagecontainer("change", "#page1");
 
+    user = $("#un").val().trim();
+    var _pw = $("#pw").val().trim();
+    var paramItems = user + "|" + _pw;
+    $.ajax({
+        type: "GET",
+        url: serviceURL + "authenticateYouSir/" + paramItems,
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        success: function (results) {
+            if (results.authenticateYouSirResult) {
+                $("#loginError").text("");
 
-    //user = $("#un").val().trim();
-    //var _pw = $("#pw").val().trim();
-    //var paramItems = user + "|" + _pw;
-    //$.ajax({
-    //    type: "GET",
-    //    url: serviceURL + "authenticateYouSir/" + paramItems,
-    //    contentType: "application/json; charset=utf-8",
-    //    cache: false,
-    //    success: function (results) {
-    //        if (results.authenticateYouSirResult) {
-    //            $("#loginError").text("");
+                $.mobile.pageContainer.pagecontainer("change", "#page1");
+                if (localStorage.fcemcInventory_uname == undefined || localStorage.fcemcInventory_uname == "") {
+                    setCookie(user, _pw, 1); //expires 1 day from inital login
+                }
+            }
+            else {
+                //window.localStorage.clear();
+                localStorage.setItem("fcemcInventory_uname", "");
+                localStorage.setItem("fcemcInventory_pass", "");
 
-    //            $.mobile.pageContainer.pagecontainer("change", "#page1");
-    //            if (localStorage.fcemcInventory_uname == undefined || localStorage.fcemcInventory_uname == "") {
-    //                setCookie(user, _pw, 1); //expires 1 day from inital login
-    //            }
-    //        }
-    //        else {
-    //            //window.localStorage.clear();
-    //            localStorage.setItem("fcemcInventory_uname", "");
-    //            localStorage.setItem("fcemcInventory_pass", "");
-
-    //            $("#loginError").text("Login Unsucessful");
-    //        }
-    //    },
-    //    error: function (jqXHR, textStatus, errorThrown) {
-    //        var e = errorThrown;
-    //        if (!(navigator.onLine)) {
-    //            $("#loginError").text("No network connection - cannot login!");
-    //        }
-    //        else {
-    //            $("#loginError").text("Login Unsucessful");
-    //        }
-    //    }
-    //});
+                $("#loginError").text("Login Unsucessful");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            var e = errorThrown;
+            if (!(navigator.onLine)) {
+                $("#loginError").text("No network connection - cannot login!");
+            }
+            else {
+                $("#loginError").text("Login Unsucessful");
+            }
+        }
+    });
 }
 
 function setCookie(u, p, t) {
