@@ -86,7 +86,9 @@
   <plugin name="org.apache.cordova.splashscreen" />
   <plugin name="org.apache.cordova.vibration" />
   <plugin name="org.apache.cordova.statusbar" />
-  <plugin name="phonegap-plugin-barcodescanner" />
+  <plugin name="phonegap-plugin-barcodescanner" >
+        <variable name="CAMERA_USAGE_DESCRIPTION" value="To Scan Barcodes" />
+  </plugin>
 
   <icon src="icon.png" />
   <platform name="android">
