@@ -721,10 +721,14 @@ function getStats() {
             $("#spinCont").show();
         },
         success: function (result) {
-            buildDrawingView();
+            if (permission >= 1) {
+                buildDrawingView();
+            }
+            else if (permission == 0) {
+                $("#drawingResults").remove();
+            }
+            
             $("#statsData").empty();
-
-
             var _c = result.MEETINGSTATSResult.COUNTY;
             var _d = result.MEETINGSTATSResult.DIST;
             var _T = 0;
@@ -754,7 +758,6 @@ function getStats() {
                     $("#r4").text(checkNull(_d[2].NONATTEND));
                     $("#r5").text(checkNull(_d[2].TOTAL));
                 }
-
                 T = parseInt(checkUndefined(_d[0])) + parseInt(checkUndefined(_d[1])) + parseInt(checkUndefined(_d[2]));
                 $("#grandT").html("Grand Total: " + T);
 
@@ -806,13 +809,8 @@ function getStats() {
                     $("#s4").text(checkNull(_c[5].NONATTEND));
                     $("#s5").text(checkNull(_c[5].TOTAL));
                 }
-
                 $("#district  table tr td").eq(0).css('width', '200px');
                 $("#county  table tr td").eq(0).css('width', '200px');
-
-
-
-
             }
 
         },
@@ -847,9 +845,9 @@ function buildDrawingView() {
                 else {
                     $("#drawingResults").append("<div>Prize winners have not been selected!</div>");
 
-                    if (permission >= 1) {
+                    //if (permission >= 1) {
                         $("#drawingResults").append("<div><button onclick='pickWinners();' style='background-color: black;' class='ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all'>Draw Winners</button></div>");
-                    }
+                    //}
                 }
 
             },
