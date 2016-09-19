@@ -1,5 +1,6 @@
 ﻿var tryingToReconnect = false, user, scanResult = 0;
 var serviceURL = "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/";
+var permission = 0;
 
 $(document).ready(function () {
     //adjust for status bar in iOS
@@ -13,7 +14,7 @@ $(document).ready(function () {
         checkCookie();
         getSpinner();
         $("#spinCont").hide();
-
+        
         toastr.options = {
             "closeButton": false,
             "debug": false,
@@ -31,6 +32,8 @@ $(document).ready(function () {
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
+
+       
     }
     else {
         if (navigator.notification.confirm("No network connection detected, check settings and try again!", networkIssue, "Please Confirm:", "Cancel, Ok")) {
@@ -175,6 +178,8 @@ function checkLogin() {
                 if (localStorage.fcemcInventory_uname == undefined || localStorage.fcemcInventory_uname == "") {
                     setCookie(user, _pw, 1); //expires 1 day from inital login
                 }
+
+                checkPermissions(user);
             }
             else {
                 //window.localStorage.clear();
@@ -229,6 +234,27 @@ function checkCookie() {
             $(":mobile-pagecontainer").pagecontainer("change", "#pageLogin");
         }
     }
+}
+
+function checkPermissions(user) {
+    $.ajax({
+        type: "GET",
+        url: serviceURL + "AM_PERM/" + user,
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        success: function (results) {
+            permission = results.AM_PERMResult;
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            var e = errorThrown;
+            if (!(navigator.onLine)) {
+                $("#loginError").text("No network connection - cannot login!");
+            }
+            else {
+                $("#loginError").text("Login Unsucessful");
+            }
+        }
+    });
 }
 //endregion
 
@@ -466,6 +492,9 @@ function beginCheckIn(memData) {
                 $("#memberData").append("<div><b>REGISTERED</b>: <label  style='display:inline-block' id='logmem_VOTE'>No</label></div>");
             }
             else if (memData[i].toString().split("|")[1] != "0") {
+                if (permission == 10) {
+                    $("#memberData").append("<div><button onclick='unregisterMemeber();' id='unregMember' style='background-color: black;' class='ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all'>Unregister Member</button></div>");
+                }
                 $("#memberData").append("<div><b>REGISTERED</b>: <label  style='display:inline-block' id='logmem_VOTE'>Yes</label></div>");
             }
         }
@@ -671,13 +700,15 @@ function getStats() {
             $("#spinCont").show();
         },
         success: function (result) {
+            buildDrawingView();
             $("#statsData").empty();
+
+
             var _c = result.MEETINGSTATSResult.COUNTY;
             var _d = result.MEETINGSTATSResult.DIST;
             var _T = 0;
 
             if (_d.length > 0) {
-
                 //DISTRICTS
                 if (_d[0] != undefined) {
                     $("#b1").text(checkNull(_d[0].MIN));
@@ -757,6 +788,10 @@ function getStats() {
 
                 $("#district  table tr td").eq(0).css('width', '200px');
                 $("#county  table tr td").eq(0).css('width', '200px');
+
+
+
+
             }
 
         },
@@ -768,6 +803,85 @@ function getStats() {
             var et = errorThrown;
         }
     });
+}
+
+function buildDrawingView() {
+    $("#drawingResults").empty();
+    $.ajax({
+            type: "GET",
+            url: serviceURL + "WINNERS",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            beforeSend: function () {
+                $("#spinCont").show();
+            },
+            success: function (result) {            
+                var re = result.WINNERSResult;
+                if (re.length > 0) {
+                    $("#drawingResults").append("<div><b>Prize winners</b></div><div id='winners' style='text-align: left; padding-left: 20px;'></div>");
+                    for (i = 0; i < re.length; i++) {
+                        $("#winners").append("<div>" + re[i] + "</div>");
+                    }
+                }
+                else {
+                    $("#drawingResults").append("<div>Prize winners have not been selected!</div>");
+
+                    if (permission >= 1) {
+                        $("#drawingResults").append("<div><button onclick='pickWinners();' style='background-color: black;' class='ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all'>Draw Winners</button></div>");
+                    }
+                }
+
+            },
+            complete: function () {
+                $("#spinCont").hide();
+            },
+            error: function (textStatus, errorThrown) {
+                var txt = textStatus;
+                var et = errorThrown;
+            }
+        });
+
+}
+
+function pickWinners() {
+    if (navigator.notification != undefined) {
+        navigator.notification.confirm("Are you sure you want to select prize winners?", pickWinnersBTN, "Please Confirm:", "No, Yes");
+    }
+    else {
+        getWinners();
+    }
+}
+
+function pickWinnersBTN(button) {
+    if (button == 2) {
+        getWinners();
+    }
+    else if (button == 1) {
+
+    }
+}
+
+function getWinners() {
+    $.ajax({
+        type: "GET",
+        url: serviceURL + "GET_RANDOM",
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
+        success: function (result) {
+            buildDrawingView();
+        },
+        complete: function () {
+            $("#spinCont").hide();
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
+
 }
 
 function checkUndefined(v) {
@@ -1053,8 +1167,8 @@ function searchNonPerson() {
     });
 }
 
-function unregisterPersonProxy() {
-    var paramItems = $("#person").val().substring(0, ($("#person").val().length - 3)) + "|" + $("#logmem_MEMBERSEP").text();
+function unregisterMemeber() {
+    var paramItems = $("#logmem_MEMBERNO").text() + "|" + $("#logmem_MEMBERSEP").text();
     $.ajax({
         type: "GET",
         url: serviceURL + "UNREGISTER/" + paramItems,
@@ -1064,7 +1178,15 @@ function unregisterPersonProxy() {
             $("#spinCont").show();
         },
         success: function (result) {
-
+            var r = result;
+            if (navigator.notification != undefined) {
+                navigator.notification.alert("Member has been unregistered!", fakeCallback, "Member Registration", "Ok");
+                resetForm();
+            }
+            else {
+                alert("Member has been unregistered!");
+                resetForm();
+            }
         },
         complete: function () {
             $("#spinCont").hide();
