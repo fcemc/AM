@@ -129,11 +129,11 @@ $(document).ready(function () {
         }
     });
 
-    $("#popuppopupCheckinError").popup({ history: false });
+    //$("#popuppopupCheckinError").popup({ history: false });
 
-    $("#popupCheckinSuccess").on("popupafterclose", function (event, ui) {
-        resetForm();
-    });
+    //$("#popupCheckinSuccess").on("popupafterclose", function (event, ui) {
+    //    resetForm();
+    //});
 
     $("a").on("click", function () {
         if ($(this).context.innerText === "Back to Main Page") {
@@ -576,12 +576,33 @@ function logMemberIn(_data) {
         },
         success: function (result) {
             if (result === "True") {
-                $("#popupCheckinSuccess").popup("open");
+                //$("#popupCheckinSuccess").popup("open");
+
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("Succes - Member Checked In!", fakeCallback, "Member Registration", "Ok");
+                    resetForm();
+                }
+                else {
+                    alert("Succes - Member Checked In!");
+                    resetForm();
+                }
+
+
             }
             else {
                 var issue = result;
-                $("#popuppopupCheckinError p").text(result);
-                $("#popuppopupCheckinError").popup("open");
+                //$("#popuppopupCheckinError p").text(result);
+                //$("#popuppopupCheckinError").popup("open");
+
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert(result, fakeCallback, "Member Registration", "Ok");
+                    resetForm();
+                }
+                else {
+                    alert(result);
+                    resetForm();
+                }
+
             }
         },
         complete: function () {
