@@ -14,7 +14,7 @@ $(document).ready(function () {
         checkCookie();
         getSpinner();
         $("#spinCont").hide();
-        
+
         toastr.options = {
             "closeButton": false,
             "debug": false,
@@ -33,7 +33,7 @@ $(document).ready(function () {
             "hideMethod": "fadeOut"
         }
 
-       
+
     }
     else {
         if (navigator.notification.confirm("No network connection detected, check settings and try again!", networkIssue, "Please Confirm:", "Cancel, Ok")) {
@@ -48,7 +48,7 @@ $(document).ready(function () {
     $("#memgrid").wijgrid({
         allowSorting: false,
         scrollMode: "auto",
-        columns: [            
+        columns: [
             {
                 cellFormatter: function (args) {
                     if (args.formattedValue > 0) {
@@ -79,7 +79,7 @@ $(document).ready(function () {
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
             { textAlignment: "center", ensureColumnsPxWidth: false, ensurePxWidth: true },
             { textAlignment: "center", ensureColumnsPxWidth: false, }
-            
+
         ],
         cellClicked: function (e, args) {
             if (args.cell._wijgrid != null) {
@@ -101,7 +101,7 @@ $(document).ready(function () {
     $("#memgrid").wijgrid('columns')[0].option('width', '80px');
     $("#memgrid").wijgrid('columns')[7].option('width', '80px');
 
-    
+
     $("#member-autocomplete-input").on("input", getMember);
 
     $(".memberSearch").on("click", function () {
@@ -452,7 +452,7 @@ function getMemberInfo(paramItems) {
     $.ajax({
         type: "GET",
         url: serviceURL + "MEMBERLIST/" + paramItems,
-        contentType: "application/json; charset=utf-8",        
+        contentType: "application/json; charset=utf-8",
         dataType: 'jsonp',
         cache: false,
         beforeSend: function () {
@@ -576,8 +576,6 @@ function logMemberIn(_data) {
         },
         success: function (result) {
             if (result === "True") {
-                //$("#popupCheckinSuccess").popup("open");
-
                 if (navigator.notification != undefined) {
                     navigator.notification.alert("Succes - Member Checked In!", fakeCallback, "Member Registration", "Ok");
                     resetForm();
@@ -586,14 +584,9 @@ function logMemberIn(_data) {
                     alert("Succes - Member Checked In!");
                     resetForm();
                 }
-
-
             }
             else {
                 var issue = result;
-                //$("#popuppopupCheckinError p").text(result);
-                //$("#popuppopupCheckinError").popup("open");
-
                 if (navigator.notification != undefined) {
                     navigator.notification.alert(result, fakeCallback, "Member Registration", "Ok");
                     resetForm();
@@ -602,7 +595,6 @@ function logMemberIn(_data) {
                     alert(result);
                     resetForm();
                 }
-
             }
         },
         complete: function () {
@@ -727,7 +719,7 @@ function getStats() {
             else if (permission == 0) {
                 $("#drawingResults").remove();
             }
-            
+
             $("#statsData").empty();
             var _c = result.MEETINGSTATSResult.COUNTY;
             var _d = result.MEETINGSTATSResult.DIST;
@@ -827,39 +819,37 @@ function getStats() {
 function buildDrawingView() {
     $("#drawingResults").empty();
     $.ajax({
-            type: "GET",
-            url: serviceURL + "WINNERS",
-            contentType: "application/json; charset=utf-8",
-            cache: false,
-            beforeSend: function () {
-                $("#spinCont").show();
-            },
-            success: function (result) {            
-                var re = result.WINNERSResult;
-                if (re.length > 0) {
-                    $("#drawingResults").append("<div><b>Prize winners</b></div><div id='winners' style='text-align: left; padding-left: 20px;'></div>");
-                    for (i = 0; i < re.length; i++) {
-                        $("#winners").append("<div>" + re[i] + "</div>");
-                    }
+        type: "GET",
+        url: serviceURL + "WINNERS",
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
+        success: function (result) {
+            var re = result.WINNERSResult;
+            if (re.length > 0) {
+                $("#drawingResults").append("<div><b>Prize winners</b></div><div id='winners' style='text-align: left; padding-left: 20px;'></div>");
+                for (i = 0; i < re.length; i++) {
+                    $("#winners").append("<div>" + re[i] + "</div>");
                 }
-                else {
-                    $("#drawingResults").append("<div>Prize winners have not been selected!</div>");
-
-                    //if (permission >= 1) {
-                        $("#drawingResults").append("<div><button onclick='pickWinners();' style='background-color: black;' class='ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all'>Draw Winners</button></div>");
-                    //}
-                }
-
-            },
-            complete: function () {
-                $("#spinCont").hide();
-            },
-            error: function (textStatus, errorThrown) {
-                var txt = textStatus;
-                var et = errorThrown;
             }
-        });
+            else {
+                $("#drawingResults").append("<div>Prize winners have not been selected!</div>");
 
+                //if (permission >= 1) {
+                $("#drawingResults").append("<div><button onclick='pickWinners();' style='background-color: black;' class='ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all'>Draw Winners</button></div>");
+                //}
+            }
+        },
+        complete: function () {
+            $("#spinCont").hide();
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
 }
 
 function pickWinners() {
@@ -1075,7 +1065,7 @@ function searchPerson() {
         },
         success: function (result) {
             var results = result.MEMBERLISTSCANResult;
-            if (results.length > 0) {
+            if (results.length == 1 && results[0].VOTE === null) {
                 var _data = {
                     "MEMBERSEP": results[0].MEMBERSEP,
                     "MAPNUMBER": results[0].MAPNUMBER,
@@ -1090,6 +1080,14 @@ function searchPerson() {
                     "PTYPE": "1"
                 };
                 logProxyMemberIn(_data);
+            }
+            else if (results.length == 1 && results[0].VOTE != null) {
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
+                }
+                else {
+                    alert("Member already registered!");
+                }
             }
             else if (results.length === 0) {
                 if (navigator.notification != undefined) {
@@ -1151,7 +1149,7 @@ function searchNonPerson() {
         },
         success: function (result) {
             var results = result.MEMBERLISTSCANResult;
-            if (results.length > 0) {
+            if (results.length == 1 && results[0].VOTE === null) {
                 var _data = {
                     "MEMBERSEP": results[0].MEMBERSEP,
                     "MAPNUMBER": results[0].MAPNUMBER,
@@ -1167,12 +1165,20 @@ function searchNonPerson() {
                 };
                 logNonProxyMemberIn(_data);
             }
+            else if (results.length == 1 && results[0].VOTE != null) {
+                if (navigator.notification != undefined) {
+                    navigator.notification.alert("Non-Member already registered!", fakeCallback, "Member Registration", "Ok");
+                }
+                else {
+                    alert("Non-Member already registered!");
+                }
+            }
             else if (results.length === 0) {
                 if (navigator.notification != undefined) {
                     navigator.notification.alert("No member found!", fakeCallback, "Member Registration", "Ok");
                 }
                 else {
-                    alert("No member found!");
+                    alert("No non-member found!");
                 }
             }
         },
