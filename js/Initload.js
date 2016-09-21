@@ -547,8 +547,14 @@ function preLogMemberIn() {
         }
         else {
             $("#spinCont").hide();
-            $("#popuppopupCheckinError p").text("You need to make a selection!");
-            $("#popuppopupCheckinError").popup("open");
+            //$("#popuppopupCheckinError p").text("You need to make a selection!");
+            //$("#popuppopupCheckinError").popup("open");
+            if (navigator.notification != undefined) {
+                navigator.notification.alert("You need to make a selection!", fakeCallback, "Member Registration", "Ok");
+            }
+            else {
+                alert("You need to make a selection!");
+            }
         }
     }
     else if ($("#logmem_VOTE").text() == "Yes") {
