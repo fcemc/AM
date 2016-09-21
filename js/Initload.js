@@ -117,23 +117,27 @@ $(document).ready(function () {
         }
         $("#member-autocomplete-input").focus();
     });
+
     $("#radio-single").on("click", clearProxyInfo);
     $("#radio-nonmemproxy").on("click", clearProxyInfo);
-    $("#radio-proxy").on("click", getProxyInfo);
+    //$("#radio-proxy").on("click", getProxyInfo);
+    $("#radio-proxy").on("click", showProxyView);
+
+
     $("#cancelCheckin").on("click", function () {
         if ($("#logmem_VOTE").text() == "No") {
-            navigator.notification.confirm("Member is not registered do you want to continue!", quitRegistration, "Please Confirm:", "No, Yes");
+            if (navigator.notification != undefined) {
+                navigator.notification.confirm("Member is not registered do you want to continue!", quitRegistration, "Please Confirm:", "No, Yes");
+            }
+            else {
+                alert("Member is not registered do you want to continue!");
+                resetForm();
+            }
         }
         else {
             resetForm();
         }
     });
-
-    //$("#popuppopupCheckinError").popup({ history: false });
-
-    //$("#popupCheckinSuccess").on("popupafterclose", function (event, ui) {
-    //    resetForm();
-    //});
 
     $("a").on("click", function () {
         if ($(this).context.innerText === "Back to Main Page") {
@@ -502,25 +506,58 @@ function beginCheckIn(memData) {
             $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>");
         }
     }
+
+
+    switch (memData[0].toString().split("|")[1]) {
+        case "0":
+
+            break;
+        case "1":
+
+            break;
+        case "2":
+            checkForProxy(memData[3].toString().split("|")[1]);
+            break;
+        case "3":
+            $("#radio-single").checkboxradio("disable");
+            $("#radio-nonmemproxy").checkboxradio("disable");
+            $("#radio-proxy").checkboxradio("disable");
+            break;
+        case "4":
+            $("#radio-single").checkboxradio("disable");
+            $("#radio-nonmemproxy").checkboxradio("disable");
+            $("#radio-proxy").checkboxradio("disable");
+            break;
+    }
+
+
 }
 
 function resetForm() {
     $("input.memberCheckIn[type=radio]").prop('checked', false).checkboxradio("refresh");
     $("#member-autocomplete-input").val("");
     $("#memgridContainer").hide();
-    $("body").pagecontainer("change", "#page1");
     clearProxyInfo();
+    $("body").pagecontainer("change", "#page1");
+
 }
 
 function preLogMemberIn() {
     if ($("#logmem_VOTE").text() == "No") {
+        var alertText = "You need to make a selection!";
+
         var _vote = "", _p = "", _pt = "0";
         $("input.memberCheckIn[type=radio]").each(function () {
             if (this.checked === true && $(this).val() == 1) {
                 _vote = this.value;
             }
             else if (this.checked === true && $(this).val() == 2) {
-                _vote = this.value;
+                if ($("#person").text() != "" || $("#nonperson").text() != "") {
+                    _vote = this.value;
+                }
+                else {
+                    alertText = "No proxy assigned to Member!";
+                }
             }
             else if (this.checked === true && $(this).val() == 3) {
                 _vote = this.value;
@@ -528,7 +565,7 @@ function preLogMemberIn() {
                 _pt = "2";  //FOR NON-PERSON PROXY
             }
         });
-
+        
         if (_vote != "") {
             var _data = {
                 "MEMBERSEP": $("#logmem_MEMBERSEP").text(),
@@ -547,13 +584,11 @@ function preLogMemberIn() {
         }
         else {
             $("#spinCont").hide();
-            //$("#popuppopupCheckinError p").text("You need to make a selection!");
-            //$("#popuppopupCheckinError").popup("open");
             if (navigator.notification != undefined) {
-                navigator.notification.alert("You need to make a selection!", fakeCallback, "Member Registration", "Ok");
+                navigator.notification.alert(alertText, fakeCallback, "Member Registration", "Ok");
             }
             else {
-                alert("You need to make a selection!");
+                alert(alertText);
             }
         }
     }
@@ -624,6 +659,10 @@ function logProxyMemberIn(_data) {
             cache: false,
             success: function (result) {
                 if (result === "True") {
+                    $("#radio-single").checkboxradio("disable");
+                    $("#radio-nonmemproxy").checkboxradio("disable");
+                    $("#radio-proxy").prop('checked', true).checkboxradio("refresh");
+
                     if (navigator.notification != undefined) {
                         $(".pbtn").css("visibility", "hidden");
                         $("#person").prop('readonly', true);
@@ -671,6 +710,10 @@ function logNonProxyMemberIn(_data) {
             cache: false,
             success: function (result) {
                 if (result === "True") {
+                    $("#radio-single").checkboxradio("disable");
+                    $("#radio-nonmemproxy").checkboxradio("disable");
+                    $("#radio-proxy").prop('checked', true).checkboxradio("refresh");
+
                     if (navigator.notification != undefined) {
                         $(".npbtn").css("visibility", "hidden");
                         $("#nonperson").prop('readonly', true);
@@ -968,9 +1011,66 @@ function clearProxyInfo() {
     $("#proxyFields").css("visibility", "hidden").css("height", "0");
     $("#person").val("");
     $("#nonperson").val("");
+
+    $("#radio-single").checkboxradio("enable");
+    $("#radio-nonmemproxy").checkboxradio("enable");
+    $("#radio-proxy").checkboxradio("enable").prop('checked', false);
+
 }
 
-function getProxyInfo() {
+function checkForProxy(MEMBERSEP) {
+    var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
+    $.ajax({
+        type: "GET",
+        url: serviceURL + "MEMBERLIST/" + paramItems,
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        beforeSend: function () {
+            $("#spinCont").show();
+        },
+        success: function (result) {
+            var results = result.MEMBERLISTResult;
+            if (results.length > 0) {
+                $("#proxyFields").css("visibility", "visible").css("height", "187px");
+                $("#person").val("");
+                $("#nonperson").val("");
+
+                $(".pbtn").css("visibility", "");
+                $(".npbtn").css("visibility", "");
+
+                $("#person").prop('readonly', false);
+                $("#nonperson").prop('readonly', false);
+
+                $("#radio-single").checkboxradio("disable");
+                $("#radio-nonmemproxy").checkboxradio("disable");
+                $("#radio-proxy").prop('checked', true).checkboxradio("refresh");
+
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].PTYPE == "1") {
+                        $("#person").val(results[i].MEMBERSEP);
+                        $(".pbtn").css("visibility", "hidden");
+                        $("#person").prop('readonly', true);
+
+                    }
+                    else if (results[i].PTYPE == "2") {
+                        $("#nonperson").val(results[i].MEMBERSEP);
+                        $(".npbtn").css("visibility", "hidden");
+                        $("#nonperson").prop('readonly', true);
+                    }
+                }
+            }
+        },
+        complete: function () {
+            $("#spinCont").hide();
+        },
+        error: function (textStatus, errorThrown) {
+            var txt = textStatus;
+            var et = errorThrown;
+        }
+    });
+}
+
+function showProxyView() {
     if ($("#logmem_PROXY").text().length == 0) {
         $("#proxyFields").css("visibility", "visible").css("height", "187px");
         $("#person").val("");
@@ -981,42 +1081,6 @@ function getProxyInfo() {
 
         $("#person").prop('readonly', false);
         $("#nonperson").prop('readonly', false);
-
-
-        var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
-        $.ajax({
-            type: "GET",
-            url: serviceURL + "MEMBERLIST/" + paramItems,
-            contentType: "application/json; charset=utf-8",
-            cache: false,
-            beforeSend: function () {
-                $("#spinCont").show();
-            },
-            success: function (result) {
-                var results = result.MEMBERLISTResult;
-                if (results.length > 0) {
-                    for (var i = 0; i < results.length; i++) {
-                        if (results[i].PTYPE == "1") {
-                            $("#person").val(results[i].MEMBERSEP);
-                            $(".pbtn").css("visibility", "hidden");
-                            $("#person").prop('readonly', true);
-                        }
-                        else if (results[i].PTYPE == "2") {
-                            $("#nonperson").val(results[i].MEMBERSEP);
-                            $(".npbtn").css("visibility", "hidden");
-                            $("#nonperson").prop('readonly', true);
-                        }
-                    }
-                }
-            },
-            complete: function () {
-                $("#spinCont").hide();
-            },
-            error: function (textStatus, errorThrown) {
-                var txt = textStatus;
-                var et = errorThrown;
-            }
-        });
     }
     else {
         if (navigator.notification != undefined) {
@@ -1026,8 +1090,71 @@ function getProxyInfo() {
             alert("Member already registered as proxy!");
         }
     }
-
 }
+
+//function getProxyInfo() {
+//    if ($("#logmem_PROXY").text().length == 0) {
+//        $("#proxyFields").css("visibility", "visible").css("height", "187px");
+//        $("#person").val("");
+//        $("#nonperson").val("");
+
+//        $(".pbtn").css("visibility", "");
+//        $(".npbtn").css("visibility", "");
+
+//        $("#person").prop('readonly', false);
+//        $("#nonperson").prop('readonly', false);
+
+
+//        var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
+//        $.ajax({
+//            type: "GET",
+//            url: serviceURL + "MEMBERLIST/" + paramItems,
+//            contentType: "application/json; charset=utf-8",
+//            cache: false,
+//            beforeSend: function () {
+//                $("#spinCont").show();
+//            },
+//            success: function (result) {
+//                var results = result.MEMBERLISTResult;
+//                if (results.length > 0) {
+
+//                    $("#radio-single").prop('disabled', true);
+//                    $("#radio-nonmemproxy").prop('disabled', true);
+//                    $("#radio-proxy").prop('checked', true).checkboxradio("refresh");
+
+//                    for (var i = 0; i < results.length; i++) {
+//                        if (results[i].PTYPE == "1") {
+//                            $("#person").val(results[i].MEMBERSEP);
+//                            $(".pbtn").css("visibility", "hidden");
+//                            $("#person").prop('readonly', true);
+//                        }
+//                        else if (results[i].PTYPE == "2") {
+//                            $("#nonperson").val(results[i].MEMBERSEP);
+//                            $(".npbtn").css("visibility", "hidden");
+//                            $("#nonperson").prop('readonly', true);
+//                        }
+//                    }
+//                }
+//            },
+//            complete: function () {
+//                $("#spinCont").hide();
+//            },
+//            error: function (textStatus, errorThrown) {
+//                var txt = textStatus;
+//                var et = errorThrown;
+//            }
+//        });
+//    }
+//    else {
+//        if (navigator.notification != undefined) {
+//            navigator.notification.alert("Member already registered as proxy!", fakeCallback, "Member Registration", "Ok");
+//        }
+//        else {
+//            alert("Member already registered as proxy!");
+//        }
+//    }
+
+//}
 
 function scanPerson() {
     try {
