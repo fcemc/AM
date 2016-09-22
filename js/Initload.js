@@ -506,14 +506,13 @@ function beginCheckIn(memData) {
             $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>");
         }
     }
-
-
+    
     switch (memData[0].toString().split("|")[1]) {
         case "0":
-
+            checkForProxy(memData[3].toString().split("|")[1]);
             break;
         case "1":
-
+            checkForProxy(memData[3].toString().split("|")[1]);
             break;
         case "2":
             checkForProxy(memData[3].toString().split("|")[1]);
@@ -552,11 +551,11 @@ function preLogMemberIn() {
                 _vote = this.value;
             }
             else if (this.checked === true && $(this).val() == 2) {
-                if ($("#person").text() != "" || $("#nonperson").text() != "") {
-                    _vote = this.value;
-                }
-                else {
+                if ($("#person").val() != "" && $("#nonperson").val() != "") {
                     alertText = "No proxy assigned to Member!";
+                }
+                else {                    
+                    _vote = this.value;
                 }
             }
             else if (this.checked === true && $(this).val() == 3) {
