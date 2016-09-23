@@ -551,7 +551,7 @@ function preLogMemberIn() {
                 _vote = this.value;
             }
             else if (this.checked === true && $(this).val() == 2) {
-                if ($("#person").val() != "" && $("#nonperson").val() != "") {
+                if ($("#person").val() == "" && $("#nonperson").val() == "") {
                     alertText = "No proxy assigned to Member!";
                 }
                 else {                    
@@ -690,10 +690,10 @@ function logProxyMemberIn(_data) {
     }
     else {
         if (navigator.notification != undefined) {
-            navigator.notification.alert("Same MBRSEP number as member!", fakeCallback, "Member Registration", "Ok");
+            navigator.notification.alert("Same MBRNO as member!", fakeCallback, "Member Registration", "Ok");
         }
         else {
-            alert("Same MBRSEP number as member!");
+            alert("Same MBRNO number as member!");
         }
     }
 }
@@ -741,10 +741,10 @@ function logNonProxyMemberIn(_data) {
     }
     else {
         if (navigator.notification != undefined) {
-            navigator.notification.alert("Same MBRSEP number as member!", fakeCallback, "Member Registration", "Ok");
+            navigator.notification.alert("Same MBRNO number as member!", fakeCallback, "Member Registration", "Ok");
         }
         else {
-            alert("Same MBRSEP number as member!");
+            alert("Same MBRNO number as member!");
         }
     }
 }
@@ -1090,70 +1090,6 @@ function showProxyView() {
         }
     }
 }
-
-//function getProxyInfo() {
-//    if ($("#logmem_PROXY").text().length == 0) {
-//        $("#proxyFields").css("visibility", "visible").css("height", "187px");
-//        $("#person").val("");
-//        $("#nonperson").val("");
-
-//        $(".pbtn").css("visibility", "");
-//        $(".npbtn").css("visibility", "");
-
-//        $("#person").prop('readonly', false);
-//        $("#nonperson").prop('readonly', false);
-
-
-//        var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
-//        $.ajax({
-//            type: "GET",
-//            url: serviceURL + "MEMBERLIST/" + paramItems,
-//            contentType: "application/json; charset=utf-8",
-//            cache: false,
-//            beforeSend: function () {
-//                $("#spinCont").show();
-//            },
-//            success: function (result) {
-//                var results = result.MEMBERLISTResult;
-//                if (results.length > 0) {
-
-//                    $("#radio-single").prop('disabled', true);
-//                    $("#radio-nonmemproxy").prop('disabled', true);
-//                    $("#radio-proxy").prop('checked', true).checkboxradio("refresh");
-
-//                    for (var i = 0; i < results.length; i++) {
-//                        if (results[i].PTYPE == "1") {
-//                            $("#person").val(results[i].MEMBERSEP);
-//                            $(".pbtn").css("visibility", "hidden");
-//                            $("#person").prop('readonly', true);
-//                        }
-//                        else if (results[i].PTYPE == "2") {
-//                            $("#nonperson").val(results[i].MEMBERSEP);
-//                            $(".npbtn").css("visibility", "hidden");
-//                            $("#nonperson").prop('readonly', true);
-//                        }
-//                    }
-//                }
-//            },
-//            complete: function () {
-//                $("#spinCont").hide();
-//            },
-//            error: function (textStatus, errorThrown) {
-//                var txt = textStatus;
-//                var et = errorThrown;
-//            }
-//        });
-//    }
-//    else {
-//        if (navigator.notification != undefined) {
-//            navigator.notification.alert("Member already registered as proxy!", fakeCallback, "Member Registration", "Ok");
-//        }
-//        else {
-//            alert("Member already registered as proxy!");
-//        }
-//    }
-
-//}
 
 function scanPerson() {
     try {
