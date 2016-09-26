@@ -1070,23 +1070,25 @@ function checkForProxy(MEMBERSEP) {
 }
 
 function showProxyView() {
-    if ($("#logmem_PROXY").text().length == 0) {
-        $("#proxyFields").css("visibility", "visible").css("height", "187px");
-        $("#person").val("");
-        $("#nonperson").val("");
+    if ($("#proxyFields").css("visibility") != "visible") {
+        if ($("#logmem_PROXY").text().length == 0) {
+            $("#proxyFields").css("visibility", "visible").css("height", "187px");
+            $("#person").val("");
+            $("#nonperson").val("");
 
-        $(".pbtn").css("visibility", "");
-        $(".npbtn").css("visibility", "");
+            $(".pbtn").css("visibility", "");
+            $(".npbtn").css("visibility", "");
 
-        $("#person").prop('readonly', false);
-        $("#nonperson").prop('readonly', false);
-    }
-    else {
-        if (navigator.notification != undefined) {
-            navigator.notification.alert("Member already registered as proxy!", fakeCallback, "Member Registration", "Ok");
+            $("#person").prop('readonly', false);
+            $("#nonperson").prop('readonly', false);
         }
         else {
-            alert("Member already registered as proxy!");
+            if (navigator.notification != undefined) {
+                navigator.notification.alert("Member already registered as proxy!", fakeCallback, "Member Registration", "Ok");
+            }
+            else {
+                alert("Member already registered as proxy!");
+            }
         }
     }
 }
