@@ -852,6 +852,9 @@ function getStats() {
                 $("#district  table tr td").eq(0).css('width', '200px');
                 $("#county  table tr td").eq(0).css('width', '200px');
             }
+            else if (_d.length == 0) {
+                $("#grandT").html("Grand Total: 0");
+            }
 
         },
         complete: function () {
