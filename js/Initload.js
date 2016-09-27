@@ -1,6 +1,5 @@
-﻿var tryingToReconnect = false, user, scanResult = 0;
+﻿var tryingToReconnect = false, user, scanResult = 0, permission = 0;
 var serviceURL = "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/";
-var permission = 0;
 
 $(document).ready(function () {
     //adjust for status bar in iOS
@@ -101,7 +100,6 @@ $(document).ready(function () {
     $("#memgrid").wijgrid('columns')[0].option('width', '80px');
     $("#memgrid").wijgrid('columns')[7].option('width', '80px');
 
-
     $("#member-autocomplete-input").on("input", getMember);
 
     $(".memberSearch").on("click", function () {
@@ -120,9 +118,7 @@ $(document).ready(function () {
 
     $("#radio-single").on("click", clearProxyInfo);
     $("#radio-nonmemproxy").on("click", clearProxyInfo);
-    //$("#radio-proxy").on("click", getProxyInfo);
     $("#radio-proxy").on("click", showProxyView);
-
 
     $("#cancelCheckin").on("click", function () {
         if ($("#logmem_VOTE").text() == "No") {
@@ -166,43 +162,46 @@ $(document).ready(function () {
 function checkLogin() {
     //$.mobile.pageContainer.pagecontainer("change", "#page1");
 
-    user = $("#un").val().trim();
-    var _pw = $("#pw").val().trim();
-    var paramItems = user + "|" + _pw;
-    $.ajax({
-        type: "GET",
-        url: serviceURL + "authenticateYouSir/" + paramItems,
-        contentType: "application/json; charset=utf-8",
-        cache: false,
-        success: function (results) {
-            if (results.authenticateYouSirResult) {
-                $("#loginError").text("");
+    if ($("#un").val() != "" && $("#pw").val() != "") {
+        user = $("#un").val().trim();
+        var _pw = $("#pw").val().trim();
+        var paramItems = user + "|" + _pw;
 
-                $.mobile.pageContainer.pagecontainer("change", "#page1");
-                if (localStorage.fcemcInventory_uname == undefined || localStorage.fcemcInventory_uname == "") {
-                    setCookie(user, _pw, 1); //expires 1 day from inital login
+        $.ajax({
+            type: "GET",
+            url: serviceURL + "authenticateYouSir/" + paramItems,
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            success: function (results) {
+                if (results.authenticateYouSirResult) {
+                    $("#loginError").text("");
+
+                    $.mobile.pageContainer.pagecontainer("change", "#page1");
+                    if (localStorage.fcemcInventory_uname == undefined || localStorage.fcemcInventory_uname == "") {
+                        setCookie(user, _pw, 1); //expires 1 day from inital login
+                    }
+
+                    checkPermissions(user);
                 }
+                else {
+                    //window.localStorage.clear();
+                    localStorage.setItem("fcemcInventory_uname", "");
+                    localStorage.setItem("fcemcInventory_pass", "");
 
-                checkPermissions(user);
+                    $("#loginError").text("Login Unsucessful");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                var e = errorThrown;
+                if (!(navigator.onLine)) {
+                    $("#loginError").text("No network connection - cannot login!");
+                }
+                else {
+                    $("#loginError").text("Login Unsucessful");
+                }
             }
-            else {
-                //window.localStorage.clear();
-                localStorage.setItem("fcemcInventory_uname", "");
-                localStorage.setItem("fcemcInventory_pass", "");
-
-                $("#loginError").text("Login Unsucessful");
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            var e = errorThrown;
-            if (!(navigator.onLine)) {
-                $("#loginError").text("No network connection - cannot login!");
-            }
-            else {
-                $("#loginError").text("Login Unsucessful");
-            }
-        }
-    });
+        });
+    }
 }
 
 function setCookie(u, p, t) {
@@ -446,8 +445,8 @@ function getMemberScanInfo(paramItems) {
             $("#spinCont").hide();
         },
         error: function (textStatus, errorThrown) {
-            var txt = textStatus;
-            var et = errorThrown;
+            //var txt = textStatus;
+            //var et = errorThrown;
         }
     });
 }
@@ -1020,11 +1019,10 @@ function clearProxyInfo() {
 
 }
 
-function checkForProxy(MEMBERSEP) {
-    var paramItems = "PROXY|" + $("#logmem_MEMBERSEP").text();
+function checkForProxy(MEMBERSEP) {    
     $.ajax({
         type: "GET",
-        url: serviceURL + "MEMBERLIST/" + paramItems,
+        url: serviceURL + "MEMBERLIST/PROXY|" + $("#logmem_MEMBERSEP").text(),
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
@@ -1126,59 +1124,59 @@ function scanPerson() {
 }
 
 function searchPerson() {
-    var paramItems = $("#person").val();
-
-    $.ajax({
-        type: "GET",
-        url: serviceURL + "MEMBERLISTSCAN/" + paramItems,
-        contentType: "application/json; charset=utf-8",
-        cache: false,
-        beforeSend: function () {
-            $("#spinCont").show();
-        },
-        success: function (result) {
-            var results = result.MEMBERLISTSCANResult;
-            if (results.length == 1 && results[0].VOTE === null) {
-                var _data = {
-                    "MEMBERSEP": results[0].MEMBERSEP,
-                    "MAPNUMBER": results[0].MAPNUMBER,
-                    "NAME": results[0].NAME,
-                    "BILLADDR": results[0].BILLADDR,
-                    "MBRNO": results[0].MEMBERNO,
-                    "SERVADDR": results[0].SERVADDR,
-                    "TELEPHONE": results[0].PHONE,
-                    "METER": results[0].METER,
-                    "VOTE": "3",
-                    "PROXY": $("#logmem_MEMBERSEP").text(),
-                    "PTYPE": "1"
-                };
-                logProxyMemberIn(_data);
+    if ($("#person").val() != "") {
+        $.ajax({
+            type: "GET",
+            url: serviceURL + "MEMBERLISTSCAN/" + $("#person").val(),
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            beforeSend: function () {
+                $("#spinCont").show();
+            },
+            success: function (result) {
+                var results = result.MEMBERLISTSCANResult;
+                if (results.length == 1 && results[0].VOTE === null) {
+                    var _data = {
+                        "MEMBERSEP": results[0].MEMBERSEP,
+                        "MAPNUMBER": results[0].MAPNUMBER,
+                        "NAME": results[0].NAME,
+                        "BILLADDR": results[0].BILLADDR,
+                        "MBRNO": results[0].MEMBERNO,
+                        "SERVADDR": results[0].SERVADDR,
+                        "TELEPHONE": results[0].PHONE,
+                        "METER": results[0].METER,
+                        "VOTE": "3",
+                        "PROXY": $("#logmem_MEMBERSEP").text(),
+                        "PTYPE": "1"
+                    };
+                    logProxyMemberIn(_data);
+                }
+                else if (results.length == 1 && results[0].VOTE != null) {
+                    if (navigator.notification != undefined) {
+                        navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
+                    }
+                    else {
+                        alert("Member already registered!");
+                    }
+                }
+                else if (results.length === 0) {
+                    if (navigator.notification != undefined) {
+                        navigator.notification.alert("No member found!", fakeCallback, "Member Registration", "Ok");
+                    }
+                    else {
+                        alert("No member found!");
+                    }
+                }
+            },
+            complete: function () {
+                $("#spinCont").hide();
+            },
+            error: function (textStatus, errorThrown) {
+                var txt = textStatus;
+                var et = errorThrown;
             }
-            else if (results.length == 1 && results[0].VOTE != null) {
-                if (navigator.notification != undefined) {
-                    navigator.notification.alert("Member already registered!", fakeCallback, "Member Registration", "Ok");
-                }
-                else {
-                    alert("Member already registered!");
-                }
-            }
-            else if (results.length === 0) {
-                if (navigator.notification != undefined) {
-                    navigator.notification.alert("No member found!", fakeCallback, "Member Registration", "Ok");
-                }
-                else {
-                    alert("No member found!");
-                }
-            }
-        },
-        complete: function () {
-            $("#spinCont").hide();
-        },
-        error: function (textStatus, errorThrown) {
-            var txt = textStatus;
-            var et = errorThrown;
-        }
-    });
+        });
+    }
 }
 
 function scanNonPerson() {
@@ -1211,65 +1209,65 @@ function scanNonPerson() {
 }
 
 function searchNonPerson() {
-    var paramItems = $("#nonperson").val();
-    $.ajax({
-        type: "GET",
-        url: serviceURL + "MEMBERLISTSCAN/" + paramItems,
-        contentType: "application/json; charset=utf-8",
-        cache: false,
-        beforeSend: function () {
-            $("#spinCont").show();
-        },
-        success: function (result) {
-            var results = result.MEMBERLISTSCANResult;
-            if (results.length == 1 && results[0].VOTE === null) {
-                var _data = {
-                    "MEMBERSEP": results[0].MEMBERSEP,
-                    "MAPNUMBER": results[0].MAPNUMBER,
-                    "NAME": results[0].NAME,
-                    "BILLADDR": results[0].BILLADDR,
-                    "MBRNO": results[0].MEMBERNO,
-                    "SERVADDR": results[0].SERVADDR,
-                    "TELEPHONE": results[0].PHONE,
-                    "METER": results[0].METER,
-                    "VOTE": "3",
-                    "PROXY": $("#logmem_MEMBERSEP").text(),
-                    "PTYPE": "2"
-                };
-                logNonProxyMemberIn(_data);
+    if ($("#nonperson").val() != "") {
+        $.ajax({
+            type: "GET",
+            url: serviceURL + "MEMBERLISTSCAN/" + $("#nonperson").val(),
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            beforeSend: function () {
+                $("#spinCont").show();
+            },
+            success: function (result) {
+                var results = result.MEMBERLISTSCANResult;
+                if (results.length == 1 && results[0].VOTE === null) {
+                    var _data = {
+                        "MEMBERSEP": results[0].MEMBERSEP,
+                        "MAPNUMBER": results[0].MAPNUMBER,
+                        "NAME": results[0].NAME,
+                        "BILLADDR": results[0].BILLADDR,
+                        "MBRNO": results[0].MEMBERNO,
+                        "SERVADDR": results[0].SERVADDR,
+                        "TELEPHONE": results[0].PHONE,
+                        "METER": results[0].METER,
+                        "VOTE": "3",
+                        "PROXY": $("#logmem_MEMBERSEP").text(),
+                        "PTYPE": "2"
+                    };
+                    logNonProxyMemberIn(_data);
+                }
+                else if (results.length == 1 && results[0].VOTE != null) {
+                    if (navigator.notification != undefined) {
+                        navigator.notification.alert("Non-Member already registered!", fakeCallback, "Member Registration", "Ok");
+                    }
+                    else {
+                        alert("Non-Member already registered!");
+                    }
+                }
+                else if (results.length === 0) {
+                    if (navigator.notification != undefined) {
+                        navigator.notification.alert("No member found!", fakeCallback, "Member Registration", "Ok");
+                    }
+                    else {
+                        alert("No non-member found!");
+                    }
+                }
+            },
+            complete: function () {
+                $("#spinCont").hide();
+            },
+            error: function (textStatus, errorThrown) {
+                var txt = textStatus;
+                var et = errorThrown;
             }
-            else if (results.length == 1 && results[0].VOTE != null) {
-                if (navigator.notification != undefined) {
-                    navigator.notification.alert("Non-Member already registered!", fakeCallback, "Member Registration", "Ok");
-                }
-                else {
-                    alert("Non-Member already registered!");
-                }
-            }
-            else if (results.length === 0) {
-                if (navigator.notification != undefined) {
-                    navigator.notification.alert("No member found!", fakeCallback, "Member Registration", "Ok");
-                }
-                else {
-                    alert("No non-member found!");
-                }
-            }
-        },
-        complete: function () {
-            $("#spinCont").hide();
-        },
-        error: function (textStatus, errorThrown) {
-            var txt = textStatus;
-            var et = errorThrown;
-        }
-    });
+        });
+    }
 }
 
-function unregisterMemeber() {
-    var paramItems = $("#logmem_MEMBERNO").text() + "|" + $("#logmem_MEMBERSEP").text();
+function unregisterMemeber() {    
     $.ajax({
         type: "GET",
-        url: serviceURL + "UNREGISTER/" + paramItems,
+        url: serviceURL + "UNREGISTER/" + $("#logmem_MEMBERNO").text() + "|" + $("#logmem_MEMBERSEP").text(),
         contentType: "application/json; charset=utf-8",
         cache: false,
         beforeSend: function () {
