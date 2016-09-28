@@ -264,6 +264,7 @@ function checkPermissions(user) {
 //region lookup region
 function scan() {
     try {
+        $("#scanText").text("");
         localStorage.setItem("fcemcInventory_scanning", true);
         cordova.plugins.barcodeScanner.scan(
           function (result) {
@@ -273,7 +274,7 @@ function scan() {
               localStorage.setItem("fcemcInventory_scanning", false);
           },
           function (error) {
-              $("#scanText").text("Scanning failed: " + error);
+              $("#scanText").text("Scanning Member failed: " + error);
               localStorage.setItem("fcemcInventory_scanning", false);
           },
           {
@@ -505,7 +506,7 @@ function beginCheckIn(memData) {
             $("#memberData").append("<div><b>" + memData[i].toString().split("|")[0] + "</b>: <label  style='display:inline-block' id='logmem_" + memData[i].toString().split("|")[0] + "'>" + memData[i].toString().split("|")[1] + "</label></div>");
         }
     }
-    
+
     switch (memData[0].toString().split("|")[1]) {
         case "0":
             checkForProxy(memData[3].toString().split("|")[1]);
@@ -553,7 +554,7 @@ function preLogMemberIn() {
                 if ($("#person").val() == "" && $("#nonperson").val() == "") {
                     alertText = "No proxy assigned to Member!";
                 }
-                else {                    
+                else {
                     _vote = this.value;
                 }
             }
@@ -563,7 +564,7 @@ function preLogMemberIn() {
                 _pt = "2";  //FOR NON-PERSON PROXY
             }
         });
-        
+
         if (_vote != "") {
             var _data = {
                 "MEMBERSEP": $("#logmem_MEMBERSEP").text(),
@@ -774,80 +775,84 @@ function getStats() {
 
             if (_d.length > 0) {
                 //DISTRICTS
-                if (_d[0] != undefined) {
-                    $("#b1").text(checkNull(_d[0].MIN));
-                    $("#b2").text(checkNull(_d[0].NONMIN));
-                    $("#b3").text(checkNull(_d[0].ATTEND));
-                    $("#b4").text(checkNull(_d[0].NONATTEND));
-                    $("#b5").text(checkNull(_d[0].TOTAL));
-                }
-
-                if (_d[1] != undefined) {
-                    $("#e1").text(checkNull(_d[1].MIN));
-                    $("#e2").text(checkNull(_d[1].NONMIN));
-                    $("#e3").text(checkNull(_d[1].ATTEND));
-                    $("#e4").text(checkNull(_d[1].NONATTEND));
-                    $("#e5").text(checkNull(_d[1].TOTAL));
-                }
-
-                if (_d[2] != undefined) {
-                    $("#r1").text(checkNull(_d[2].MIN));
-                    $("#r2").text(checkNull(_d[2].NONMIN));
-                    $("#r3").text(checkNull(_d[2].ATTEND));
-                    $("#r4").text(checkNull(_d[2].NONATTEND));
-                    $("#r5").text(checkNull(_d[2].TOTAL));
+                for (d = 0; d < _d.length; d++) {
+                    var dist = _d[d].CATAGORY;
+                    switch (dist) {
+                        case "1":
+                            $("#b1").text(checkNull(_d[0].MIN));
+                            $("#b2").text(checkNull(_d[0].NONMIN));
+                            $("#b3").text(checkNull(_d[0].ATTEND));
+                            $("#b4").text(checkNull(_d[0].NONATTEND));
+                            $("#b5").text(checkNull(_d[0].TOTAL));
+                            break;
+                        case "2":
+                            $("#e1").text(checkNull(_d[1].MIN));
+                            $("#e2").text(checkNull(_d[1].NONMIN));
+                            $("#e3").text(checkNull(_d[1].ATTEND));
+                            $("#e4").text(checkNull(_d[1].NONATTEND));
+                            $("#e5").text(checkNull(_d[1].TOTAL));
+                            break;
+                        case "3":
+                            $("#r1").text(checkNull(_d[2].MIN));
+                            $("#r2").text(checkNull(_d[2].NONMIN));
+                            $("#r3").text(checkNull(_d[2].ATTEND));
+                            $("#r4").text(checkNull(_d[2].NONATTEND));
+                            $("#r5").text(checkNull(_d[2].TOTAL));
+                            break;
+                    }
                 }
                 T = parseInt(checkUndefined(_d[0])) + parseInt(checkUndefined(_d[1])) + parseInt(checkUndefined(_d[2]));
                 $("#grandT").html("Grand Total: " + T);
 
                 //Countys
-                if (_c[0] != undefined) {
-                    $("#bl1").text(checkNull(_c[0].MIN));
-                    $("#bl2").text(checkNull(_c[0].NONMIN));
-                    $("#bl3").text(checkNull(_c[0].ATTEND));
-                    $("#bl4").text(checkNull(_c[0].NONATTEND));
-                    $("#bl5").text(checkNull(_c[0].TOTAL));
+                for (c = 0; c < _c.length; c++) {
+                    var county = _c[c].CATAGORY;
+                    switch (county) {
+                        case "BLADEN":
+                            $("#bl1").text(checkNull(_c[c].MIN));
+                            $("#bl2").text(checkNull(_c[c].NONMIN));
+                            $("#bl3").text(checkNull(_c[c].ATTEND));
+                            $("#bl4").text(checkNull(_c[c].NONATTEND));
+                            $("#bl5").text(checkNull(_c[c].TOTAL));
+                            break;
+                        case "COLUMBUS":
+                            $("#c1").text(checkNull(_c[c].MIN));
+                            $("#c2").text(checkNull(_c[c].NONMIN));
+                            $("#c3").text(checkNull(_c[c].ATTEND));
+                            $("#c4").text(checkNull(_c[c].NONATTEND));
+                            $("#c5").text(checkNull(_c[c].TOTAL));
+                            break;
+                        case "DUPLIN":
+                            $("#d1").text(checkNull(_c[c].MIN));
+                            $("#d2").text(checkNull(_c[c].NONMIN));
+                            $("#d3").text(checkNull(_c[c].ATTEND));
+                            $("#d4").text(checkNull(_c[c].NONATTEND));
+                            $("#d5").text(checkNull(_c[c].TOTAL));
+                            break;
+                        case "PENDER":
+                            $("#p1").text(checkNull(_c[c].MIN));
+                            $("#p2").text(checkNull(_c[c].NONMIN));
+                            $("#p3").text(checkNull(_c[c].ATTEND));
+                            $("#p4").text(checkNull(_c[c].NONATTEND));
+                            $("#p5").text(checkNull(_c[c].TOTAL));
+                            break;
+                        case "SAMPSON":
+                            $("#s1").text(checkNull(_c[c].MIN));
+                            $("#s2").text(checkNull(_c[c].NONMIN));
+                            $("#s3").text(checkNull(_c[c].ATTEND));
+                            $("#s4").text(checkNull(_c[c].NONATTEND));
+                            $("#s5").text(checkNull(_c[c].TOTAL));
+                            break;
+                        case "ONSLOW":
+                            $("#o1").text(checkNull(_c[c].MIN));
+                            $("#o2").text(checkNull(_c[c].NONMIN));
+                            $("#o3").text(checkNull(_c[c].ATTEND));
+                            $("#o4").text(checkNull(_c[c].NONATTEND));
+                            $("#o5").text(checkNull(_c[c].TOTAL));
+                            break;
+                    }
                 }
 
-                if (_c[1] != undefined) {
-                    $("#c1").text(checkNull(_c[1].MIN));
-                    $("#c2").text(checkNull(_c[1].NONMIN));
-                    $("#c3").text(checkNull(_c[1].ATTEND));
-                    $("#c4").text(checkNull(_c[1].NONATTEND));
-                    $("#c5").text(checkNull(_c[1].TOTAL));
-                }
-
-                if (_c[2] != undefined) {
-                    $("#d1").text(checkNull(_c[2].MIN));
-                    $("#d2").text(checkNull(_c[2].NONMIN));
-                    $("#d3").text(checkNull(_c[2].ATTEND));
-                    $("#d4").text(checkNull(_c[2].NONATTEND));
-                    $("#d5").text(checkNull(_c[2].TOTAL));
-                }
-
-                if (_c[3] != undefined) {
-                    $("#o1").text(checkNull(_c[3].MIN));
-                    $("#o2").text(checkNull(_c[3].NONMIN));
-                    $("#o3").text(checkNull(_c[3].ATTEND));
-                    $("#o4").text(checkNull(_c[3].NONATTEND));
-                    $("#o5").text(checkNull(_c[3].TOTAL));
-                }
-
-                if (_c[4] != undefined) {
-                    $("#p1").text(checkNull(_c[4].MIN));
-                    $("#p2").text(checkNull(_c[4].NONMIN));
-                    $("#p3").text(checkNull(_c[4].ATTEND));
-                    $("#p4").text(checkNull(_c[4].NONATTEND));
-                    $("#p5").text(checkNull(_c[4].TOTAL));
-                }
-
-                if (_c[5] != undefined) {
-                    $("#s1").text(checkNull(_c[5].MIN));
-                    $("#s2").text(checkNull(_c[5].NONMIN));
-                    $("#s3").text(checkNull(_c[5].ATTEND));
-                    $("#s4").text(checkNull(_c[5].NONATTEND));
-                    $("#s5").text(checkNull(_c[5].TOTAL));
-                }
                 $("#district  table tr td").eq(0).css('width', '200px');
                 $("#county  table tr td").eq(0).css('width', '200px');
             }
@@ -1019,7 +1024,7 @@ function clearProxyInfo() {
 
 }
 
-function checkForProxy(MEMBERSEP) {    
+function checkForProxy(MEMBERSEP) {
     $.ajax({
         type: "GET",
         url: serviceURL + "MEMBERLIST/PROXY|" + $("#logmem_MEMBERSEP").text(),
@@ -1096,6 +1101,7 @@ function showProxyView() {
 
 function scanPerson() {
     try {
+        $("#scanText").text("");
         localStorage.setItem("fcemcInventory_scanning", true);
         cordova.plugins.barcodeScanner.scan(
           function (result) {
@@ -1106,7 +1112,7 @@ function scanPerson() {
               localStorage.setItem("fcemcInventory_scanning", false);
           },
           function (error) {
-              $("#scanText").text("Scanning failed: " + error);
+              $("#scanText").text("Scanning Person failed: " + error);
               localStorage.setItem("fcemcInventory_scanning", false);
           },
           {
@@ -1181,6 +1187,7 @@ function searchPerson() {
 
 function scanNonPerson() {
     try {
+        $("#scanText").text("");
         localStorage.setItem("fcemcInventory_scanning", true);
         cordova.plugins.barcodeScanner.scan(
           function (result) {
@@ -1191,7 +1198,7 @@ function scanNonPerson() {
               localStorage.setItem("fcemcInventory_scanning", false);
           },
           function (error) {
-              $("#scanText").text("Scanning failed: " + error);
+              $("#scanText").text("Scanning Non-Person failed: " + error);
               localStorage.setItem("fcemcInventory_scanning", false);
           },
           {
@@ -1264,7 +1271,7 @@ function searchNonPerson() {
     }
 }
 
-function unregisterMemeber() {    
+function unregisterMemeber() {
     $.ajax({
         type: "GET",
         url: serviceURL + "UNREGISTER/" + $("#logmem_MEMBERNO").text() + "|" + $("#logmem_MEMBERSEP").text(),
