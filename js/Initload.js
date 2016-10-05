@@ -341,12 +341,12 @@ function fakeCallback() { }
 
 //manual lookup region
 function getMember(scanResult) {
-    if ($("#member-autocomplete-input").val().length >= 3) {
+    if ($("#member-autocomplete-input").val().length >= 1) {
         var v = $("#member-autocomplete-input").val();
         var f;
         $("input.memberSearch[type=radio]").each(function () {
             if (this.checked === true) {
-                f = this.value;
+              f = this.value;
             }
         });
         getMemberInfo(f + "|" + v);
