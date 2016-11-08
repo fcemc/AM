@@ -9,6 +9,9 @@ $(document).ready(function () {
         $(".pg").css({ "margin-top": "20px" });
     }
 
+    $("#page1content a").css('margin-bottom', '20px');
+
+
     if (navigator.onLine) {
         checkCookie();
         getSpinner();
@@ -528,8 +531,6 @@ function beginCheckIn(memData) {
             $("#radio-proxy").checkboxradio("disable");
             break;
     }
-
-
 }
 
 function resetForm() {
@@ -538,7 +539,6 @@ function resetForm() {
     $("#memgridContainer").hide();
     clearProxyInfo();
     $("body").pagecontainer("change", "#page1");
-
 }
 
 function preLogMemberIn() {
