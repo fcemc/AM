@@ -779,25 +779,25 @@ function getStats() {
                     var dist = _d[d].CATAGORY;
                     switch (dist) {
                         case "1":
-                            $("#b1").text(checkNull(_d[0].MIN));
-                            $("#b2").text(checkNull(_d[0].NONMIN));
-                            $("#b3").text(checkNull(_d[0].ATTEND));
-                            $("#b4").text(checkNull(_d[0].NONATTEND));
-                            $("#b5").text(checkNull(_d[0].TOTAL));
+                            $("#b1").text(checkNull(_d[d].MIN));
+                            $("#b2").text(checkNull(_d[d].NONMIN));
+                            $("#b3").text(checkNull(_d[d].ATTEND));
+                            $("#b4").text(checkNull(_d[d].NONATTEND));
+                            $("#b5").text(checkNull(_d[d].TOTAL));
                             break;
                         case "2":
-                            $("#e1").text(checkNull(_d[1].MIN));
-                            $("#e2").text(checkNull(_d[1].NONMIN));
-                            $("#e3").text(checkNull(_d[1].ATTEND));
-                            $("#e4").text(checkNull(_d[1].NONATTEND));
-                            $("#e5").text(checkNull(_d[1].TOTAL));
+                            $("#e1").text(checkNull(_d[d].MIN));
+                            $("#e2").text(checkNull(_d[d].NONMIN));
+                            $("#e3").text(checkNull(_d[d].ATTEND));
+                            $("#e4").text(checkNull(_d[d].NONATTEND));
+                            $("#e5").text(checkNull(_d[d].TOTAL));
                             break;
                         case "3":
-                            $("#r1").text(checkNull(_d[2].MIN));
-                            $("#r2").text(checkNull(_d[2].NONMIN));
-                            $("#r3").text(checkNull(_d[2].ATTEND));
-                            $("#r4").text(checkNull(_d[2].NONATTEND));
-                            $("#r5").text(checkNull(_d[2].TOTAL));
+                            $("#r1").text(checkNull(_d[d].MIN));
+                            $("#r2").text(checkNull(_d[d].NONMIN));
+                            $("#r3").text(checkNull(_d[d].ATTEND));
+                            $("#r4").text(checkNull(_d[d].NONATTEND));
+                            $("#r5").text(checkNull(_d[d].TOTAL));                            
                             break;
                     }
                 }
