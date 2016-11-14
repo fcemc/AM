@@ -159,6 +159,15 @@ $(document).ready(function () {
         }
     });
 
+    $("#lightSwitch").on("click", function () {
+        if (this.checked === true) {            
+            $("#lightSwitchLbl").html("Light on when scanning");
+        }
+        else {                        
+            $("#lightSwitchLbl").html("Light off when scanning");            
+        }
+    });
+
 });
 
 //region Login&Cookies
@@ -269,18 +278,25 @@ function scan() {
     try {
         $("#scanText").text("");
         localStorage.setItem("fcemcInventory_scanning", true);
+
+        if ($("#lightSwitch").is("checked")) {
+            scanlight(true);
+        }
+
         cordova.plugins.barcodeScanner.scan(
           function (result) {
+              scanlight(false);
               if (result.cancelled != 1) {
                   getMemberScanInfo(result.text.trim(result.text));
               }
               localStorage.setItem("fcemcInventory_scanning", false);
           },
           function (error) {
+              scanlight(false);
               $("#scanText").text("Scanning Member failed: " + error);
               localStorage.setItem("fcemcInventory_scanning", false);
           },
-          {
+          {              
               "preferFrontCamera": false, // iOS and Android
               "showFlipCameraButton": true, // iOS and Android
               "prompt": "Place a barcode inside the scan area", // supported on Android only
@@ -292,6 +308,22 @@ function scan() {
     catch (err) {
         alert(err.message.toString());
     }
+}
+
+function scanlight(enable) {
+    window.plugins.flashlight.available(function (isAvailable) {
+        if (isAvailable) {
+            if (enable) {
+                window.plugins.flashlight.switchOn(
+                   function () { },
+                    function () { },
+                    { intensity: 0.3 }
+                );
+            } else {
+                window.plugins.flashlight.switchOff();
+            }
+        }
+    });
 }
 
 function getSpinner() {
