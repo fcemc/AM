@@ -279,20 +279,20 @@ function scan() {
         $("#scanText").text("");
         localStorage.setItem("fcemcInventory_scanning", true);
 
-        if ($("#lightSwitch").is(':checked')) {
-            scanlight(true);
-        }
+        //if ($("#lightSwitch").is(':checked')) {
+        //    scanlight(true);
+        //}
 
         cordova.plugins.barcodeScanner.scan(
           function (result) {
-              scanlight(false);
+              //scanlight(false);
               if (result.cancelled != 1) {
                   getMemberScanInfo(result.text.trim(result.text));
               }
               localStorage.setItem("fcemcInventory_scanning", false);
           },
           function (error) {
-              scanlight(false);
+              //scanlight(false);
               $("#scanText").text("Scanning Member failed: " + error);
               localStorage.setItem("fcemcInventory_scanning", false);
           },
@@ -310,21 +310,21 @@ function scan() {
     }
 }
 
-function scanlight(enable) {
-    window.plugins.flashlight.available(function (isAvailable) {
-        if (isAvailable) {
-            if (enable) {
-                window.plugins.flashlight.switchOn(
-                   function () { },
-                    function () { },
-                    { intensity: 0.3 }
-                );
-            } else {
-                window.plugins.flashlight.switchOff();
-            }
-        }
-    });
-}
+//function scanlight(enable) {
+//    window.plugins.flashlight.available(function (isAvailable) {
+//        if (isAvailable) {
+//            if (enable) {
+//                window.plugins.flashlight.switchOn(
+//                   function () { },
+//                    function () { },
+//                    { intensity: 0.3 }
+//                );
+//            } else {
+//                window.plugins.flashlight.switchOff();
+//            }
+//        }
+//    });
+//}
 
 function getSpinner() {
     var opts = {
