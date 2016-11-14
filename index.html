@@ -47,12 +47,16 @@
         <div class="hdr" data-role="header">
             <h1>FCEMC-Annual Meeting</h1>
         </div>
-        <div role="main" class="ui-content">
+        <div role="main" id="page1content" class="ui-content">
             <div style="text-align:center;">
                 <a style="background-color: #0D914F;" href="" onclick="scan();" class="ui-btn ui-corner-all">Scan to Lookup</a>
                 <a style="background-color: #0D914F;" href="#memSearchPage" class="ui-btn ui-corner-all">Manual Lookup</a>
                 <a style="background-color: #0D914F;" href="#statsPage" onclick="getStats();" class="ui-btn ui-corner-all">Stats</a>
                 <label style="color:black" id="scanText"></label>
+            </div>
+            <div id="light" style="color:black; width:200px;">                                
+                <label id="lightSwitchLbl" for="lightSwitch">Light off when scanning</label>
+                <input type="checkbox" name="lightSwitch" id="lightSwitch">
             </div>
         </div>
     </div>
@@ -132,7 +136,7 @@
                     </div>
                 </div>
             </div>
-        </form>        
+        </form>
         <div data-role="header">
             <button id="cancelCheckin" style="background-color: red;" class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cancel</button>
             <h1></h1>
