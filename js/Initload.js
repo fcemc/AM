@@ -279,7 +279,7 @@ function scan() {
         $("#scanText").text("");
         localStorage.setItem("fcemcInventory_scanning", true);
 
-        if ($("#lightSwitch").is("checked")) {
+        if ($("#lightSwitch").is(':checked')) {
             scanlight(true);
         }
 
