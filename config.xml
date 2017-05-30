@@ -4,7 +4,7 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
 		xmlns:android   = "http://schemas.android.com/apk/res/android"
         id        = "com.fcemc.FCEMCam"
-        version   = "1.1.1">
+        version   = "1.1.2">
 
   <name>FCEMC-Annual Meeting</name>
 
@@ -63,7 +63,7 @@
         Define a specific version of PhoneGap to build into your app.
         <preference name="phonegap-version"       value="3.5.0" />
     -->
-<preference name="phonegap-version" value="cli-6.3.0" />
+<preference name="phonegap-version" value="cli-6.5.0" />
   <!-- Plugins -->
 
   <!-- Core plugins -->
@@ -141,7 +141,7 @@
 
 
   <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>1.1.1</string>
+    <string>1.1.2</string>
   </gap:config-file>
 
   <gap:config-file platform="android" parent="/manifest">
@@ -166,7 +166,7 @@
     -->
 
   <!-- Allow links to example.com -->
-  <allow-navigation href="http://gis.fourcty.org/*" />
+  <allow-navigation href="https://gis.fourcty.org/*" />
 
   <!--Wildcards are allowed for the protocol, as a prefix
      to the host, or as a suffix to the path-->
