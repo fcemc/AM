@@ -1,5 +1,5 @@
 ﻿var tryingToReconnect = false, user, scanResult = 0, permission = 0;
-var serviceURL = "HTTP://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/";
+var serviceURL = "https://gis.fourcty.org/FCEMCrest/FCEMCDataService.svc/";
 
 $(document).ready(function () {
     //adjust for status bar in iOS
