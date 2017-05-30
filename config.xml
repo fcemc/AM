@@ -1,15 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
-<widget xmlns     = "http://www.w3.org/ns/widgets"
-        xmlns:gap = "http://phonegap.com/ns/1.0"
-		xmlns:android   = "http://schemas.android.com/apk/res/android"
-        id        = "com.fcemc.FCEMCam"
-        version   = "1.1.2">
-
-  <name>FCEMC-Annual Meeting</name>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns   = "http://www.w3.org/ns/widgets"
+    xmlns:gap   = "http://phonegap.com/ns/1.0"
+    xmlns:android   = "http://schemas.android.com/apk/res/android"
+    id          = "com.fcemc.FCEMComs"    
+    version     = "1.0.4" >
+  
+  <name>FCEMC-OMS</name>
 
   <description>
-    Four County EMC - Mobile Annual Meeting Application
+    Four County EMC - Mobile Outage Management Application
   </description>
 
   <author href="http://www.fcemc.org" email="jerrysimmons@fourcty.org">
@@ -24,13 +23,13 @@
   <preference name="permissions"                value="none"/>
 
   <!-- Customize your app and platform with the preference element. -->
-
+  
   <preference name="orientation"                value="default" />
   <!-- all: default means both landscape and portrait are enabled -->
-
+  
   <preference name="target-device"              value="universal" />
   <!-- all: possible values handset, tablet, or universal -->
-
+  
   <preference name="fullscreen"                 value="false" />
   <!-- all: hides the status bar at the top of the screen -->
 
@@ -56,40 +55,43 @@
   <preference name="android-installLocation"    value="auto" />
   <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
   <!--<preference name="StatusBarBackgroundColor" value="#ff0000" />-->
-
   <preference name="android-build-tool" value="gradle" />
 
   <!--
         Define a specific version of PhoneGap to build into your app.
         <preference name="phonegap-version"       value="3.5.0" />
     -->
-<preference name="phonegap-version" value="cli-6.5.0" />
+
+  <preference name="phonegap-version" value="cli-6.5.0" />
   <!-- Plugins -->
 
   <!-- Core plugins -->
-  <plugin name="org.apache.cordova.battery-status" />
+  <!--<plugin name="org.apache.cordova.battery-status" />
   <plugin name="org.apache.cordova.camera" />
   <plugin name="org.apache.cordova.media-capture" />
-  <plugin name="org.apache.cordova.console" />
-  <plugin name="org.apache.cordova.contacts" />
+  <plugin name="org.apache.cordova.console" />-->
+  <!--<plugin name="org.apache.cordova.contacts" />-->
   <plugin name="org.apache.cordova.device" />
   <plugin name="org.apache.cordova.device-motion" />
   <plugin name="org.apache.cordova.device-orientation" />
   <plugin name="org.apache.cordova.dialogs" />
-  <plugin name="org.apache.cordova.file" />
-  <plugin name="org.apache.cordova.file-transfer" />
+  <!--<plugin name="org.apache.cordova.file" />
+  <plugin name="org.apache.cordova.file-transfer" /-->>
   <plugin name="org.apache.cordova.geolocation" />
-  <plugin name="org.apache.cordova.globalization" />
-  <plugin name="org.apache.cordova.inappbrowser" />
+  <!--<plugin name="org.apache.cordova.globalization" />
+  <plugin name="org.apache.cordova.inappbrowser" />-->
   <plugin name="org.apache.cordova.media" />
-  <plugin name="org.apache.cordova.network-information" />
+  <!--<plugin name="org.apache.cordova.network-information" />-->
   <plugin name="org.apache.cordova.splashscreen" />
   <plugin name="org.apache.cordova.vibration" />
   <plugin name="org.apache.cordova.statusbar" />
-  <plugin name="cordova-plugin-flashlight" />
-  <plugin name="phonegap-plugin-barcodescanner" >
-        <variable name="CAMERA_USAGE_DESCRIPTION" value="To Scan Barcodes" />
+  <!--<plugin name="phonegap-plugin-push" spec="~1.4.5" source="npm" />-->
+  
+  <plugin name="phonegap-plugin-push" spec="1.6.0">
+    <param name="SENDER_ID" value="18994795059" />
   </plugin>
+
+
 
   <icon src="icon.png" />
   <platform name="android">
@@ -100,21 +102,23 @@
   </platform>
 
   <platform name="ios">
-    <icon src="res/icon/ios/icon-60@3x.png" platform="ios" width="180" height="180" />
+    <icon src="res/icon/ios/icon-40.png" platform="ios" width="40" height="40" />
+    <icon src="res/icon/ios/icon-40@2x.png" platform="ios" width="80" height="80" />
+    <icon src="res/icon/ios/icon-50.png" platform="ios" width="50" height="50" />
+    <icon src="res/icon/ios/icon-50@2x.png" platform="ios" width="100" height="100" />
+    <icon src="res/icon/ios/icon-57.png" platform="ios" width="57" height="57" />    
+    <icon src="res/icon/ios/icon-57-2x.png" platform="ios" width="114" height="114" />
     <icon src="res/icon/ios/icon-60.png" platform="ios" width="60" height="60" />
     <icon src="res/icon/ios/icon-60@2x.png" platform="ios" width="120" height="120" />
+    <icon src="res/icon/ios/icon-60@3x.png" platform="ios" width="180" height="180" />
+    <icon src="res/icon/ios/icon-72.png" platform="ios" width="72" height="72" />
+    <icon src="res/icon/ios/icon-72@2x.png" platform="ios" width="144" height="144" />
     <icon src="res/icon/ios/icon-76.png" platform="ios" width="76" height="76" />
     <icon src="res/icon/ios/icon-76@2x.png" platform="ios" width="152" height="152" />
     <icon src="res/icon/ios/icon-small.png" platform="ios" width="29" height="29" />
-    <icon src="res/icon/ios/icon-small@2x.png" platform="ios" width="58" height="58" />
-    <icon src="res/icon/ios/icon-40.png" platform="ios" width="40" height="40" />
-    <icon src="res/icon/ios/icon-40@2x.png" platform="ios" width="80" height="80" />
+    <icon src="res/icon/ios/icon-small@2x.png" platform="ios" width="58" height="58" />    
     <icon src="res/icon/ios/icon.png" platform="ios" width="57" height="57" />
     <icon src="res/icon/ios/icon@2x.png" platform="ios" width="114" height="114" />
-    <icon src="res/icon/ios/icon-72.png" platform="ios" width="72" height="72" />
-    <icon src="res/icon/ios/icon-72@2x.png" platform="ios" width="144" height="144" />
-    <icon src="res/icon/ios/icon-50.png" platform="ios" width="50" height="50" />
-    <icon src="res/icon/ios/icon-50@2x.png" platform="ios" width="100" height="100" />
   </platform>
 
   <splash src="splash.png" />
@@ -139,9 +143,8 @@
   </platform>
   <!--<preference name="SplashScreenDelay" value="10000" />-->
 
-
   <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>1.1.2</string>
+    <string>1.0.4</string>
   </gap:config-file>
 
   <gap:config-file platform="android" parent="/manifest">
@@ -154,7 +157,7 @@
       </activity>-->
     </application>
   </gap:config-file>
-
+  
   <!--
         Define access to external domains.
         <access />            - a blank access tag denies access to all external resources.
@@ -164,23 +167,23 @@
         <access origin="http://phonegap.com" subdomains="true" />  - same as above, but including subdomains, such as http://build.phonegap.com/
         <access origin="http://phonegap.com" browserOnly="true" /> - only allows http://phonegap.com to be opened by the child browser.
     -->
-
+  
   <!-- Allow links to example.com -->
-  <allow-navigation href="https://gis.fourcty.org/*" />
+<allow-navigation href="https://gis.fourcty.org/*" />
 
-  <!--Wildcards are allowed for the protocol, as a prefix
-     to the host, or as a suffix to the path-->
-  <allow-navigation href="http://*/*" />
+ <!--Wildcards are allowed for the protocol, as a prefix
+     to the host, or as a suffix to the path--> 
+<allow-navigation href="http://*/*" />
 
-  <!--A wildcard can be used to whitelist the entire network,
+ <!--A wildcard can be used to whitelist the entire network,
      over HTTP and HTTPS.
      *NOT RECOMMENDED*-->
-  <allow-navigation href="*" />
+<allow-navigation href="*" />
 
-  <!-- The above is equivalent to these three declarations -->
-  <allow-navigation href="http://*/*" />
-  <allow-navigation href="https://*/*" />
-  <allow-navigation href="data:*" />
+<!-- The above is equivalent to these three declarations -->
+<allow-navigation href="http://*/*" />
+<allow-navigation href="https://*/*" />
+<allow-navigation href="data:*" />
 
   <access origin="*"/>
   <!-- Added the following intents to support the removal of whitelist code from base cordova to a plugin -->
@@ -192,11 +195,11 @@
   <allow-intent href="sms:*" />
   <allow-intent href="mailto:jerrysimmons@fourcty.org" />
   <allow-intent href="geo:*" />
-
+  
   <platform name="android">
     <allow-intent href="market:*" />
   </platform>
-
+  
   <platform name="ios">
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
