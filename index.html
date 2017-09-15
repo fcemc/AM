@@ -1,20 +1,25 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>       
-    <title>FCEMC-OMS</title>
+<head>
+    <title>FCEMC-Annual Meeting</title>
     <link href="js/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
     <link href="css/MiniDashbaord.css" rel="stylesheet" />
     <link href="css/StyleSheet.css" rel="stylesheet" />
-    <link href="css/jquery.mobile.icons.min.css" rel="stylesheet" />
+
     <script src="js/jquery-1.12.2.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>
-        
+
+    <!--Wijmo Widgets CSS-->
+    <link href="wijmo/jquery.wijmo-pro.all.css" rel="stylesheet" />
+    <!--Wijmo Widgets JavaScript-->
+    <script src="wijmo/jquery.wijmo-open.all.min.js"></script>
+    <script src="wijmo/jquery.wijmo-pro.all.min.js"></script>
+
     <script src="js/toastr.min.js"></script>
     <link href="content/toastr.min.css" rel="stylesheet" />
-    <script src="https://gis.fourcty.org/FCEMCrest/scripts/jquery.signalR-2.2.0.min.js"></script>
-    <script src="https://gis.fourcty.org/FCEMCrest/signalr/hubs/hubs"></script>
 
-    <script src="js/OMSload.js"></script>
+    <script src="js/Initload.js"></script>
+    <!--<script src="js/barcodescanner.js"></script>-->
     <script src="js/jquery.spin.js"></script>
     <script src="phonegap.js"></script>
 </head>
@@ -23,14 +28,14 @@
         <div id="spinwheel"></div>
     </div>
 
-    <div class="pg" data-role="page" data-dialog="true" id="pageLogin">
+    <div data-role="page" data-dialog="true" id="pageLogin">
         <div id="popupLoginWindow" style="padding:10px 20px;">
             <h3>Please sign in</h3>
             <label for="un" class="ui-hidden-accessible">Username:</label>
             <input type="text" name="user" id="un" value="" placeholder="username">
             <label for="pw" class="ui-hidden-accessible">Password:</label>
             <input type="password" name="pass" id="pw" value="" placeholder="password">
-            <a href="" onclick="checkLogin();" class="ui-shadow ui-btn ui-corner-all ui-btn-inline" data-transition="pop">Submit</a>
+            <a href="" style="background-color: #0D914F;" onclick="checkLogin();" class="ui-shadow ui-btn ui-corner-all ui-btn-inline" data-transition="pop">Submit</a>
             <label class="redbull" id="loginError"></label>
         </div>
         <div style="text-align:center">
@@ -38,107 +43,212 @@
         </div>
     </div>
 
-    <div class="pg" data-role="page" id="page1">
+    <div data-role="page" id="page1">
         <div class="hdr" data-role="header">
-            <h1>FCEMC-OMS <a href="#" onclick="initLoad();" class="ui-btn ui-btn-inline ui-icon-recycle ui-btn-icon-notext"></a></h1>
+            <h1>FCEMC-Annual Meeting</h1>
+        </div>
+        <div role="main" id="page1content" class="ui-content">
+            <div style="text-align:center;">
+                <a style="background-color: #0D914F;" href="" onclick="scan();" class="ui-btn ui-corner-all">Scan to Lookup</a>
+                <a style="background-color: #0D914F;" href="#memSearchPage" class="ui-btn ui-corner-all">Manual Lookup</a>
+                <a style="background-color: #0D914F;" href="#statsPage" onclick="getStats();" class="ui-btn ui-corner-all">Stats</a>
+                <label style="color:black" id="scanText"></label>
+            </div>
+            <!--<div id="light" style="color:black; width:200px;">                                
+                <label id="lightSwitchLbl" for="lightSwitch">Light off when scanning</label>
+                <input type="checkbox" name="lightSwitch" id="lightSwitch">
+            </div>-->
+        </div>
+    </div>
+
+    <div data-role="page" id="memSearchPage">
+        <div data-role="header">
+            <h1>Member Search</h1>
         </div>
         <div role="main" class="ui-content">
-            <div style="text-align:center;">
-                <div id="outage"></div>
-                <div id="scadaoutage"></div>
+            <form class="ui-filterable">
+                <div style="text-align: center;">
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <input class="memberSearch" type="radio" name="radio-choice-h-2" id="radio-choice-h-2a" value="MBRSEP" checked="checked">
+                        <label for="radio-choice-h-2a">Account</label>
+                        <input class="memberSearch" type="radio" name="radio-choice-h-2" id="radio-choice-h-2b" value="NAME">
+                        <label for="radio-choice-h-2b">Name</label>
+                        <input class="memberSearch" type="radio" name="radio-choice-h-2" id="radio-choice-h-2c" value="BILLADDR">
+                        <label for="radio-choice-h-2c">BillAddress</label>
+                        <input class="memberSearch" type="radio" name="radio-choice-h-2" id="radio-choice-h-2d" value="MAPNUMBER">
+                        <label for="radio-choice-h-2d">MapNumber</label>
+                        <input class="memberSearch" type="radio" name="radio-choice-h-2" id="radio-choice-h-2e" value="TELEPHONE">
+                        <label for="radio-choice-h-2e">Phone</label>
+                        <input class="memberSearch" type="radio" name="radio-choice-h-2" id="radio-choice-h-2f" value="MBRNO">
+                        <label for="radio-choice-h-2f">MemberNumber</label>
+                        <input class="memberSearch" type="radio" name="radio-choice-h-2" id="radio-choice-h-2g" value="SERVADDR">
+                        <label for="radio-choice-h-2g">ServiceAddress</label>
+                    </fieldset>
+                </div>
+                <input type="number" autocomplete="off" id="member-autocomplete-input" data-type="search" placeholder="Member Search...">
+            </form>
+            <div style="font-size:11px;" id="memgridContainer">
+                <table id="memgrid"></table>
             </div>
-        </div>
-        <div style="text-align:center; background-color: gainsboro;" data-role="popup" id="popup" class="ui-content" data-dismissible="false">
-            <label id="noteLbl">Enter the notes for the outage</label>                        
-            <div>
-                <textarea name="textArea" id="noteNotes" cols="50" rows="3" maxlength="100"></textarea>
-            </div>
-            <label style="font-size:small;" id="lettersLeft"></label>
-            <a href="#" style="background-color:red;" onclick="closeNote();" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-c" data-rel="back">Cancel</a>
-            <a href="#" onclick="addNote();" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" data-transition="flow">Submit</a>
+            <a style="background-color: #0D914F;" href="#page1" class="ui-btn ui-corner-all">Back to Main Page</a>
         </div>
     </div>
 
-    <div class="pg" data-role="page" id="page2">
+    <div data-role="page" id="checkInPage">
+        <div class="header" data-role="header">
+            <h1>Member Check In</h1>
+        </div>
+        <div id="memberData" style="color: black; text-align: center;"></div>
+        <form class="ui-filterable">
+            <div style="text-align: center;">
+                <fieldset data-role="controlgroup" data-type="horizontal">
+                    <input class="memberCheckIn" type="radio" name="radio-choice-h-2" id="radio-single" value="1"> <!--SINGLE-->
+                    <label for="radio-single">Single</label>
+                    <input class="memberCheckIn" type="radio" name="radio-choice-h-2" id="radio-proxy" value="2"> <!--PROXY-->
+                    <label for="radio-proxy">MemberProxy</label>
+                    <input class="memberCheckIn" type="radio" name="radio-choice-h-2" id="radio-nonmemproxy" value="3"> <!--NON Memeber PROXY-->
+                    <label for="radio-nonmemproxy">NonMemberProxy</label>
+                </fieldset>
+            </div>
+            <div id="proxyFields" style="color: black; text-align: center; padding-bottom:10px; visibility:hidden; height:0;">
+                <label>Person:</label>
+                <div id="personContent">
+                    <div class="pbtn" style='display:inline-block;'>
+                        <input type='button' onclick='scanPerson();' value='Scan' />
+                    </div>
+                    <div style='display:inline-block; vertical-align:top; padding-top:2px;'>
+                        <input id='person' type='number' />
+                    </div>
+                    <div class="pbtn" style='display:inline-block;'>
+                        <input type='button' onclick='searchPerson();' value='Register' />
+                    </div>
+                </div>
+                <label>Non-Person:</label>
+                <div id="nonpersonContent">
+                    <div class="npbtn" style='display:inline-block;'>
+                        <input type='button' onclick='scanNonPerson();' value='Scan' />
+                    </div>
+                    <div style='display:inline-block; vertical-align:top; padding-top:2px;'>
+                        <input id='nonperson' type='number' />
+                    </div>
+                    <div class="npbtn" style='display:inline-block;'>
+                        <input type='button' onclick='searchNonPerson();' value='Register' />
+                    </div>
+                </div>
+            </div>
+        </form>
         <div data-role="header">
-            <h1>Confirm Outage</h1>
-        </div>
-        <div role="main" class="ui-content" style="text-align:center;">
-            <div data-role="tabs" id="tabs" class="ui-corner-all">
-                <div data-role="navbar">
-                    <ul>
-                        <li><a id="tab-one" href="#one" data-ajax=" false">Current Device</a></li>
-                        <li><a id="tab-two" href="#two" data-ajax="false">Upstream Device</a></li>
-                    </ul>
-                </div>
-                <div id="one" class="ui-body-d ui-content" style="background-color:white; color:black;">
-                    <div>Confirm outage on device: <label id="confrimLbl"></label></div>
-                </div>
-                <div id="two" class="ui-body-d ui-content" style="background-color:white; color:black;">
-                    <label for="select-upstream">Confirm outage on upstream device</label>
-                    <select name="select-upstream" id="select-upstream"></select>
-                    <label for="select-phase">Select outage phase for device</label>
-                    <select name="select-phase" id="select-phase">
-                        <option value="A">A Phase</option>
-                        <option value="B">B Phase</option>
-                        <option value="C">C Phase</option>
-                        <option value="AB">AB Phase</option>
-                        <option value="AC">AC Phase</option>
-                        <option value="BC">BC Phase</option>
-                        <option value="ABC">ABC Phase</option>
-                    </select>
-                </div>
-            </div>
-
-            <button style="background-color:red;" onclick="quit();" class="ui-btn ui-corner-all">Cancel</button>
-            <button style="background-color:black;" onclick="confirmOutage();" class="ui-btn ui-corner-all">Confirm Outage</button>
+            <button id="cancelCheckin" style="background-color: red;" class="ui-btn-left ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cancel</button>
+            <h1></h1>
+            <button id="saveCheckin" style="background-color: lawngreen; text-shadow:1px 1px 4px black" class="ui-btn-right ui-btn ui-btn-c ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check ">Save</button>
         </div>
     </div>
-
-    <div class="pg" data-role="page" id="page3">
+    <div data-role="page" id="statsPage">
         <div data-role="header">
-            <h1>Restore Outage</h1>
+            <h1>Meeting Stats</h1>
         </div>
-        <div role="main" class="ui-content" style="color:black;">
-            Restore outage on device: <label id="restoreLbl"></label>
-            <div class="ui-field-contain">
-                <div>
-                    <label for="select-cause">Outage Cause:</label>
-                </div>
-                <div>
-                    <select name="select-cause" id="select-cause"></select>
-                </div>
+        <div role="main" class="ui-content">
+            <div style="color: black; text-align: center; border:1px solid black; border-radius: 5px; margin-bottom:10px;">
+                <table id="district">
+                    <tr>
+                        <th style="width:200px">Office</th>
+                        <th>Minority</th>
+                        <th>Non-Minority</th>
+                        <th>Attending Totals</th>
+                        <th>Non-Attending Totals</th>
+                        <th>Total Members</th>
+                    </tr>
+                    <tr>
+                        <td>Burgaw</td>
+                        <td><label id="b1">0</label></td>
+                        <td><label id="b2">0</label></td>
+                        <td><label id="b3">0</label></td>
+                        <td><label id="b4">0</label></td>
+                        <td><label id="b5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Elizabethtown</td>
+                        <td><label id="e1">0</label></td>
+                        <td><label id="e2">0</label></td>
+                        <td><label id="e3">0</label></td>
+                        <td><label id="e4">0</label></td>
+                        <td><label id="e5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Rose Hill</td>
+                        <td><label id="r1">0</label></td>
+                        <td><label id="r2">0</label></td>
+                        <td><label id="r3">0</label></td>
+                        <td><label id="r4">0</label></td>
+                        <td><label id="r5">0</label></td>
+                    </tr>
+                </table>
+                <table id="county">
+                    <tr>
+                        <th style="width:200px">County</th>
+                        <th>Minority</th>
+                        <th>Non-Minority</th>
+                        <th>Attending Totals</th>
+                        <th>Non-Attending Totals</th>
+                        <th>Total Members</th>
+                    </tr>
+                    <tr>
+                        <td>Bladen</td>
+                        <td><label id="bl1">0</label></td>
+                        <td><label id="bl2">0</label></td>
+                        <td><label id="bl3">0</label></td>
+                        <td><label id="bl4">0</label></td>
+                        <td><label id="bl5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Columbus</td>
+                        <td><label id="c1">0</label></td>
+                        <td><label id="c2">0</label></td>
+                        <td><label id="c3">0</label></td>
+                        <td><label id="c4">0</label></td>
+                        <td><label id="c5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Duplin</td>
+                        <td><label id="d1">0</label></td>
+                        <td><label id="d2">0</label></td>
+                        <td><label id="d3">0</label></td>
+                        <td><label id="d4">0</label></td>
+                        <td><label id="d5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Onslow</td>
+                        <td><label id="o1">0</label></td>
+                        <td><label id="o2">0</label></td>
+                        <td><label id="o3">0</label></td>
+                        <td><label id="o4">0</label></td>
+                        <td><label id="o5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Pender</td>
+                        <td><label id="p1">0</label></td>
+                        <td><label id="p2">0</label></td>
+                        <td><label id="p3">0</label></td>
+                        <td><label id="p4">0</label></td>
+                        <td><label id="p5">0</label></td>
+                    </tr>
+                    <tr>
+                        <td>Sampson</td>
+                        <td><label id="s1">0</label></td>
+                        <td><label id="s2">0</label></td>
+                        <td><label id="s3">0</label></td>
+                        <td><label id="s4">0</label></td>
+                        <td><label id="s5">0</label></td>
+                    </tr>
+                </table>
+                <div id="grandT" style="color: black; font-weight:700; text-align: center;"></div>
             </div>
-            <div class="ui-field-contain">
-                <div>
-                    <label for="select-weather">Weather Condition:</label>
-                </div>
-                <div>
-                    <select name="select-weather" id="select-weather"></select>
-                </div>
+            <div id="drawingResults" style="color: black; text-align: center; border:1px solid black; border-radius: 5px;">
             </div>
-            <div class="ui-field-contain">
-                <div>
-                    <label for="select-equipment">Equipment Failure:</label>
-                </div>
-                <div>
-                    <select name="select-equipment" id="select-equipment"></select>
-                </div>
-            </div>
-            <div class="ui-field-contain">
-                <div>
-                    <label for="select-other">Event:</label>
-                </div>
-                <div>
-                    <select name="select-other" id="select-other"></select>
-                </div>
-            </div>
-            <button style="background-color:red;" onclick="quit();" class="ui-btn ui-corner-all">Cancel</button>
-            <button style="background-color:black;" onclick="restoreOutage();" class="ui-btn ui-corner-all">Close Outage</button>
+            <a style="background-color: #0D914F;" href="#page1" class="ui-btn ui-corner-all">Back to Main Page</a>
         </div>
     </div>
-
-    <script src="cordova.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
         app.initialize();
